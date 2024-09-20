@@ -1,7 +1,7 @@
 public class CombatUnit {
-    protected final int id;
-    protected final String name;
-    protected final int combatEffectiveness;
+    private final int id;
+    private final String name;
+    private final int combatEffectiveness;
 
     protected CombatUnit(int id, String name, int attackPoint, int defensePoint) {
         this.id = id;

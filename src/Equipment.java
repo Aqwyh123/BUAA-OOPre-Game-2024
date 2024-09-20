@@ -1,8 +1,8 @@
 public class Equipment extends Item {
     private int durability;
 
-    public Equipment(int id, String name, int durability, int combatEffectiveness, Adventurer owner) {
-        super(id, name, combatEffectiveness, owner);
+    public Equipment(int id, String name, int durability, int ce, Adventurer owner) {
+        super(id, name, ce, owner);
         this.durability = durability;
     }
 

@@ -17,14 +17,14 @@ public class Player {
         adventurers.put(id, new Adventurer(id, name));
     }
 
-    public void addBottle(int adventurerId, int id, String name, int capacity, String type, int combatEffectiveness) {
-        Adventurer adventurer = adventurers.get(adventurerId);
-        adventurer.addItem(new Bottle(id, name, capacity, type, combatEffectiveness, adventurer));
+    public void addBottle(int advId, int id, String name, int capacity, String type, int ce) {
+        Adventurer adventurer = adventurers.get(advId);
+        adventurer.addItem(new Bottle(id, name, capacity, type, ce, adventurer));
     }
 
-    public void addEquipment(int adventurerId, int id, String name, int durability, int combatEffectiveness) {
-        Adventurer adventurer = adventurers.get(adventurerId);
-        adventurer.addItem(new Equipment(id, name, durability, combatEffectiveness, adventurer));
+    public void addEquipment(int advId, int id, String name, int durability, int ce) {
+        Adventurer adventurer = adventurers.get(advId);
+        adventurer.addItem(new Equipment(id, name, durability, ce, adventurer));
     }
 
     public String improveEquipment(int adventurerId, int equipmentId) {
@@ -73,11 +73,15 @@ public class Player {
 
     public String useBottle(int adventurerId, int bottleId) {
         Adventurer adventurer = adventurers.get(adventurerId);
-        Bottle bottle = (Bottle) adventurer.getItem(bottleId);
+        String bottleName = adventurer.getItem(bottleId).getName();
+        String advName = adventurer.getName();
         if (adventurer.useBottle(bottleId) == 0) {
-            return adventurer.getName() + " " + adventurer.getHitPoint() + " " + adventurer.getAttackPoint() + " " + adventurer.getDefensePoint();
+            int hp = adventurer.getHitPoint();
+            int atk = adventurer.getAttackPoint();
+            int def = adventurer.getDefensePoint();
+            return advName + " " + hp + " " + atk + " " + def;
         } else {
-            return adventurer.getName() + " fail to use " + bottle.getName();
+            return advName + " fail to use " + bottleName;
         }
     }
 }
