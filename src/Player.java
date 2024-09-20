@@ -1,73 +1,79 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Player {
-    private final ArrayList<Adventurer> adventurers;
+    private static final int DEFAULT_IMPROVEMENT = 1;
+    private final HashMap<Integer, Adventurer> adventurers = new HashMap<>();
     private static final Player instance = new Player();
-
-    private Player() {
-        adventurers = new ArrayList<>();
-    }
 
     public static Player getInstance() {
         return instance;
     }
 
     public void addAdventurer(int id, String name) {
-        adventurers.add(new Adventurer(id, name));
+        adventurers.put(id, new Adventurer(id, name));
     }
 
-    public void addBottle(int adventurerId, int id, String name, int capacity) {
-        for (Adventurer adventurer : adventurers) {
-            if (adventurer.getId() == adventurerId) {
-                adventurer.addBottle(new Bottle(id, name, capacity));
-            }
-        }
+    public void addBottle(int adventurerId, int id, String name, int capacity, String type, int combatEffectiveness) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        adventurer.addItem(new Bottle(id, name, capacity, type, combatEffectiveness));
     }
 
-    public void addEquipment(int adventurerId, int id, String name, int durability) {
-        for (Adventurer adventurer : adventurers) {
-            if (adventurer.getId() == adventurerId) {
-                adventurer.addEquipment(new Equipment(id, name, durability));
-            }
-        }
+    public void addEquipment(int adventurerId, int id, String name, int durability, int combatEffectiveness) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        adventurer.addItem(new Equipment(id, name, durability, combatEffectiveness));
     }
 
-    public String improveEquipment(int adventurerId, int equipmentId, int durability) {
-        for (Adventurer adventurer : adventurers) {
-            if (adventurer.getId() == adventurerId) {
-                Equipment equipment = adventurer.getEquipment(equipmentId);
-                equipment.improve(durability);
-                return equipment.getName() + " " + equipment.getDurability();
-            }
-        }
-        return null;
+    public String improveEquipment(int adventurerId, int equipmentId) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        adventurer.improveEquipment(equipmentId, DEFAULT_IMPROVEMENT);
+        Equipment equipment = (Equipment) adventurer.getItem(equipmentId);
+        return adventurer.getName() + " " + equipment.getDurability();
     }
 
-    public String deleteBottle(int adventurerId, int bottleId) {
-        for (Adventurer adventurer : adventurers) {
-            if (adventurer.getId() == adventurerId) {
-                Bottle bottle = adventurer.getBottle(bottleId);
-                adventurer.deleteBottle(bottleId);
-                int count = adventurer.getBottleCount();
-                String name = bottle.getName();
-                int capacity = bottle.getCapacity();
-                return count + " " + name + " " + capacity;
+    public String deleteItem(int adventurerId, int itemId) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        Item item = adventurer.getItem(itemId);
+        adventurer.deleteItem(itemId);
+        String className;
+        int value;
+        if (item instanceof Bottle) {
+            switch (((Bottle) item).getType()) {
+                case "HpBottle":
+                    className = "HpBottle";
+                    break;
+                case "AtkBottle":
+                    className = "AtkBottle";
+                    break;
+                case "DefBottle":
+                    className = "DefBottle";
+                    break;
+                default:
+                    className = "Bottle";
+                    break;
             }
+            value = ((Bottle) item).getCapacity();
+        } else if (item instanceof Equipment) {
+            className = "Equipment";
+            value = ((Equipment) item).getDurability();
+        } else {
+            className = "Item";
+            value = 0;
         }
-        return null;
+        return className + " " + item.getName() + " " + value;
     }
 
-    public String deleteEquipment(int adventurerId, int equipmentId) {
-        for (Adventurer adventurer : adventurers) {
-            if (adventurer.getId() == adventurerId) {
-                Equipment equipment = adventurer.getEquipment(equipmentId);
-                adventurer.deleteEquipment(equipmentId);
-                int count = adventurer.getEquipmentCount();
-                String name = equipment.getName();
-                int durability = equipment.getDurability();
-                return count + " " + name + " " + durability;
-            }
+    public void carryItem(int adventurerId, int itemId) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        adventurer.carryItem(itemId);
+    }
+
+    public String useBottle(int adventurerId, int bottleId) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        Bottle bottle = (Bottle) adventurer.getItem(bottleId);
+        if (adventurer.useBottle(bottleId) == 0) {
+            return adventurer.getName() + " " + adventurer.getHitPoint() + " " + adventurer.getAttackPoint() + " " + adventurer.getDefensePoint();
+        } else {
+            return adventurer.getName() + " fail to use " + bottle.getName();
         }
-        return null;
     }
 }

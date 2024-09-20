@@ -18,29 +18,37 @@ public class Main {
                     int id = Integer.parseInt(command.get(2));
                     String name = command.get(3);
                     int capacity = Integer.parseInt(command.get(4));
-                    player.addBottle(adventurerId, id, name, capacity);
+                    String type = command.get(5);
+                    int combatEffectiveness = Integer.parseInt(command.get(6));
+                    player.addBottle(adventurerId, id, name, capacity, type, combatEffectiveness);
                     break;
                 }
                 case "3": {
                     int id = Integer.parseInt(command.get(2));
                     String name = command.get(3);
                     int durability = Integer.parseInt(command.get(4));
-                    player.addEquipment(adventurerId, id, name, durability);
+                    int combatEffectiveness = Integer.parseInt(command.get(5));
+                    player.addEquipment(adventurerId, id, name, durability, combatEffectiveness);
                     break;
                 }
                 case "4": {
                     int equipmentId = Integer.parseInt(command.get(2));
-                    System.out.println(player.improveEquipment(adventurerId, equipmentId, 1));
+                    System.out.println(player.improveEquipment(adventurerId, equipmentId));
                     break;
                 }
                 case "5": {
-                    int bottleId = Integer.parseInt(command.get(2));
-                    System.out.println(player.deleteBottle(adventurerId, bottleId));
+                    int itemId = Integer.parseInt(command.get(2));
+                    System.out.println(player.deleteItem(adventurerId, itemId));
                     break;
                 }
                 case "6": {
-                    int equipmentId = Integer.parseInt(command.get(2));
-                    System.out.println(player.deleteEquipment(adventurerId, equipmentId));
+                    int itemId = Integer.parseInt(command.get(2));
+                    player.carryItem(adventurerId, itemId);
+                    break;
+                }
+                case "7": {
+                    int bottleId = Integer.parseInt(command.get(2));
+                    System.out.println(player.useBottle(adventurerId, bottleId));
                     break;
                 }
                 default:

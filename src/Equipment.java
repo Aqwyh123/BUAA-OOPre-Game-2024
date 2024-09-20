@@ -1,27 +1,16 @@
-public class Equipment {
-    private final int id;
-    private final String name;
+public class Equipment extends Item {
     private int durability;
 
-    public Equipment(int id, String name, int durability) {
-        this.id = id;
-        this.name = name;
+    public Equipment(int id, String name, int durability, int combatEffectiveness) {
+        super(id, name, combatEffectiveness);
         this.durability = durability;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public int getDurability() {
-        return durability;
+        return this.durability;
     }
 
-    public void improve(int durability) {
+    public void improveDurability(int durability) {
         this.durability += durability;
     }
 }
