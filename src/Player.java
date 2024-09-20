@@ -9,6 +9,10 @@ public class Player {
         return instance;
     }
 
+    public void reset() {
+        instance.adventurers.clear();
+    }
+
     public void addAdventurer(int id, String name) {
         adventurers.put(id, new Adventurer(id, name));
     }
@@ -27,7 +31,7 @@ public class Player {
         Adventurer adventurer = adventurers.get(adventurerId);
         adventurer.improveEquipment(equipmentId, DEFAULT_IMPROVEMENT);
         Equipment equipment = (Equipment) adventurer.getItem(equipmentId);
-        return adventurer.getName() + " " + equipment.getDurability();
+        return equipment.getName() + " " + equipment.getDurability();
     }
 
     public String deleteItem(int adventurerId, int itemId) {
