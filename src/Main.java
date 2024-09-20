@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        ArrayList<ArrayList<String>> commands = new Main().scanCommands(); // 读取输入
+        final ArrayList<ArrayList<String>> commands = new Main().scanCommands(); // 读取输入
         final Player player = Player.getInstance(); // 获取Player实例
         for (ArrayList<String> command : commands) {
             int adventurerId = Integer.parseInt(command.get(1));

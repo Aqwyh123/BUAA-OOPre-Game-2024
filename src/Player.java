@@ -15,12 +15,12 @@ public class Player {
 
     public void addBottle(int adventurerId, int id, String name, int capacity, String type, int combatEffectiveness) {
         Adventurer adventurer = adventurers.get(adventurerId);
-        adventurer.addItem(new Bottle(id, name, capacity, type, combatEffectiveness));
+        adventurer.addItem(new Bottle(id, name, capacity, type, combatEffectiveness, adventurer));
     }
 
     public void addEquipment(int adventurerId, int id, String name, int durability, int combatEffectiveness) {
         Adventurer adventurer = adventurers.get(adventurerId);
-        adventurer.addItem(new Equipment(id, name, durability, combatEffectiveness));
+        adventurer.addItem(new Equipment(id, name, durability, combatEffectiveness, adventurer));
     }
 
     public String improveEquipment(int adventurerId, int equipmentId) {

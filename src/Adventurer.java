@@ -74,10 +74,13 @@ public class Adventurer extends CombatUnit {
         Bottle bottle = (Bottle) backpack.getItem(bottleId);
         if (bottle == null) {
             return -1;
+        } else if (bottle.isUsed()) {
+            this.deleteItem(bottleId);
+            return 0;
+        } else {
+            bottle.drunk();
+            return 0;
         }
-        int status = bottle.drunk(this);
-        deleteItem(bottleId);
-        return status;
     }
 
     public void improveEquipment(int equipmentId, int durability) {

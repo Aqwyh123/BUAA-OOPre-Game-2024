@@ -1,30 +1,29 @@
 public class Bottle extends Item {
-    private int capacity;
+    private final int capacity;
+    private boolean isUsed;
     private final String type;
-    protected static final double RATIO = 100.0;
+    private static final double RATIO = 100.0;
 
-    protected Bottle(int id, String name, int capacity, String type, int combatEffectiveness) {
-        super(id, name, combatEffectiveness);
+    public Bottle(int id, String name, int capacity, String type, int combatEffectiveness, Adventurer owner) {
+        super(id, name, combatEffectiveness, owner);
         this.type = type;
         this.capacity = capacity;
+        this.isUsed = false;
     }
 
-    protected int getCapacity() {
+    public int getCapacity() {
         return capacity;
     }
 
-    protected String getType() {
+    public String getType() {
         return type;
     }
 
-    protected void empty() {
-        this.capacity = 0;
+    public boolean isUsed() {
+        return isUsed;
     }
 
-    public int drunk(Adventurer owner) {
-        if (this.getCapacity() == 0) {
-            return -1;
-        }
+    public void drunk() {
         switch (type) {
             case "HpBottle":
                 owner.improveHitPoint(this.getCapacity());
@@ -36,7 +35,6 @@ public class Bottle extends Item {
                 owner.improveDefensePoint(this.getCombatEffectiveness() + (int) Math.floor(this.getCapacity() / RATIO));
                 break;
         }
-        this.empty();
-        return 0;
+        this.isUsed = true;
     }
 }
