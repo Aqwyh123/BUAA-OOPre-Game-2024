@@ -22,6 +22,7 @@ public class PlayerTest {
         player.addEquipment(100, 1, "Sword", 100, 100);
         player.addBottle(200, 2, "AtkB", 0, "AtkBottle", 10);
         Assert.assertEquals("Equipment Sword 100", player.deleteItem(100, 1));
+        player.carryItem(200, 2);
         Assert.assertEquals("AtkBottle AtkB 0", player.deleteItem(200, 2));
         player.reset();
     }
@@ -37,6 +38,9 @@ public class PlayerTest {
         Assert.assertEquals("Alice 500 11 0", player.useBottle(100, 1));
         Assert.assertEquals("Alice fail to use DefB", player.useBottle(100, 2));
         Assert.assertEquals("Alice fail to use DefB", player.useBottle(100, 2));
+        player.carryItem(100, 2);
+        Assert.assertEquals("Alice 500 11 24", player.useBottle(100, 2));
+        Assert.assertEquals("Alice 500 11 24", player.useBottle(100, 2));
         player.reset();
     }
 }

@@ -24,17 +24,17 @@ public class Bottle extends Item {
     }
 
     public void drunk() {
-        int combatEffectiveness = this.getCombatEffectiveness();
+        int ce = this.getCombatEffectiveness();
         int capacity = this.getCapacity();
         switch (type) {
             case "HpBottle":
                 getOwner().improveHitPoint(this.getCapacity());
                 break;
             case "AtkBottle":
-                getOwner().improveAttackPoint(combatEffectiveness + (int) Math.floor(capacity / RATIO));
+                getOwner().improveAttackPoint(ce + (int) Math.floor(capacity / RATIO));
                 break;
             case "DefBottle":
-                getOwner().improveDefensePoint(combatEffectiveness + (int) Math.floor(capacity / RATIO));
+                getOwner().improveDefensePoint(ce + (int) Math.floor(capacity / RATIO));
                 break;
             default:
                 break;
