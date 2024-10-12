@@ -17,14 +17,14 @@ public class Player {
         adventurers.put(id, new Adventurer(id, name));
     }
 
-    public void addBottle(int advId, int id, String name, int capacity, String type, int ce) {
+    public void addBottle(int advId, int botId, String name, int capacity, String type, int ce) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addItem(new Bottle(id, name, capacity, type, ce, adventurer));
+        adventurer.addItem(new Bottle(botId, name, capacity, type, ce, adventurer));
     }
 
-    public void addEquipment(int advId, int id, String name, int durability, int ce) {
+    public void addEquipment(int advId, int equId, String name, int durability, int ce) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addItem(new Equipment(id, name, durability, ce, adventurer));
+        adventurer.addItem(new Equipment(equId, name, durability, ce, adventurer));
     }
 
     public String improveEquipment(int adventurerId, int equipmentId) {
@@ -38,8 +38,8 @@ public class Player {
         Adventurer adventurer = adventurers.get(adventurerId);
         Item item = adventurer.getItem(itemId);
         adventurer.deleteItem(itemId);
-        String className;
-        int value;
+        String className = null;
+        int value = 0;
         if (item instanceof Bottle) {
             switch (((Bottle) item).getType()) {
                 case "HpBottle":
@@ -52,16 +52,12 @@ public class Player {
                     className = "DefBottle";
                     break;
                 default:
-                    className = "Bottle";
                     break;
             }
             value = ((Bottle) item).getCapacity();
         } else if (item instanceof Equipment) {
             className = "Equipment";
             value = ((Equipment) item).getDurability();
-        } else {
-            className = "Item";
-            value = 0;
         }
         return className + " " + item.getName() + " " + value;
     }
@@ -75,7 +71,8 @@ public class Player {
         Adventurer adventurer = adventurers.get(adventurerId);
         String bottleName = adventurer.getItem(bottleId).getName();
         String advName = adventurer.getName();
-        if (adventurer.useBottle(bottleId) == 0) {
+        int status = adventurer.useBottle(bottleId);
+        if (status == 0) {
             int hp = adventurer.getHitPoint();
             int atk = adventurer.getAttackPoint();
             int def = adventurer.getDefensePoint();
