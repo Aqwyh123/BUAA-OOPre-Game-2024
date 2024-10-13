@@ -6,8 +6,7 @@ public class Adventurer extends CombatUnit {
     private int attackPoint;
     private int defensePoint;
     private final Inventory<Item> backpack = new Inventory<>();
-    private final Inventory<Item> possessions = new Inventory<>();
-    private final Inventory<Fragment> fragments = new Inventory<>();
+    private final Inventory<Unit> possessions = new Inventory<>();
 
     public Adventurer(int id, String name) {
         super(id, name, ORIGINAL_ATTACK_POINT + ORIGINAL_DEFENSE_POINT, null);
@@ -40,21 +39,29 @@ public class Adventurer extends CombatUnit {
         this.defensePoint += defensePoint;
     }
 
-    public Item getItem(int itemId) {
-        return possessions.getUnit(itemId);
+    public Unit getUnit(int unitId) {
+        return possessions.getUnit(unitId);
     }
 
-    public void addItem(Item item) {
+    public void addUnit(Item item) {
         possessions.addUnit(item);
     }
 
-    public void deleteItem(int itemId) {
-        this.discardItem(itemId);
-        possessions.deleteUnit(itemId);
+    public void addUnit(Fragment fragment) {
+        possessions.addUnit(fragment);
+    }
+
+    public void deleteUnit(int unitId) {
+        this.discardItem(unitId);
+        possessions.deleteUnit(unitId);
+    }
+
+    public int countUnit(String name) {
+        return possessions.countUnit(name);
     }
 
     public void carryItem(int itemId) {
-        Item item = getItem(itemId);
+        Item item = (Item) getUnit(itemId);
         if (item == null) {
             return;
         }
@@ -74,7 +81,7 @@ public class Adventurer extends CombatUnit {
         if (bottle == null) {
             return -1;
         } else if (bottle.isUsed()) {
-            this.deleteItem(bottleId);
+            this.deleteUnit(bottleId);
             return 0;
         } else {
             bottle.drunk();
@@ -90,7 +97,13 @@ public class Adventurer extends CombatUnit {
         equipment.improveDurability(durability);
     }
 
-    public void addFragment(Fragment fragment) {
-        fragments.addUnit(fragment);
+    public int redeemWarfare(String name, int welfareId) {
+        int fragmentNum = countUnit(name);
+        if (fragmentNum < 5) {
+            return -1;
+        } else {
+            Fragment fragment = (Fragment) possessions.getUnit(name);
+            return fragment.redeemed(welfareId);
+        }
     }
 }

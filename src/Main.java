@@ -47,6 +47,15 @@ public class Main {
                     System.out.println(player.useBottle(adventurerId, unitId));
                     break;
                 }
+                case "8": {
+                    String name = command.get(3);
+                    player.addFragment(adventurerId, unitId, name);
+                }
+                case "9": {
+                    String name = command.get(3);
+                    int welfareId = Integer.parseInt(command.get(4));
+                    System.out.println(player.redeemWarfare(adventurerId, name, welfareId));
+                }
                 default:
                     break;
             }

@@ -7,6 +7,15 @@ public class Inventory<T> {
         return units.get(itemId);
     }
 
+    public T getUnit(String name) {
+        for (T unit : units.values()) {
+            if (((Unit) unit).getName().equals(name)) {
+                return unit;
+            }
+        }
+        return null;
+    }
+
     public void addUnit(T unit) {
         units.put(((Unit) unit).getId(), unit);
     }

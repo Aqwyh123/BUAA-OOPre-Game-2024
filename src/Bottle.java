@@ -17,6 +17,10 @@ public class Bottle extends Item {
         return isUsed;
     }
 
+    public void fill() {
+        this.isUsed = false;
+    }
+
     public void drunk() {
         int ce = this.getCombatEffectiveness();
         int capacity = this.getCapacity();

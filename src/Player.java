@@ -19,25 +19,25 @@ public class Player {
 
     public void addBottle(int advId, int botId, String name, int capacity, String type, int ce) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addItem(new Bottle(botId, name, capacity, type, ce, adventurer));
+        adventurer.addUnit(new Bottle(botId, name, capacity, type, ce, adventurer));
     }
 
     public void addEquipment(int advId, int equId, String name, int durability, String type, int ce) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addItem(new Equipment(equId, name, durability, type, ce, adventurer));
+        adventurer.addUnit(new Equipment(equId, name, durability, type, ce, adventurer));
     }
 
     public String improveEquipment(int adventurerId, int equipmentId) {
         Adventurer adventurer = adventurers.get(adventurerId);
         adventurer.improveEquipment(equipmentId, DEFAULT_IMPROVEMENT);
-        Equipment equipment = (Equipment) adventurer.getItem(equipmentId);
+        Equipment equipment = (Equipment) adventurer.getUnit(equipmentId);
         return equipment.getName() + " " + equipment.getDurability();
     }
 
     public String deleteItem(int adventurerId, int itemId) {
         Adventurer adventurer = adventurers.get(adventurerId);
-        Item item = adventurer.getItem(itemId);
-        adventurer.deleteItem(itemId);
+        Item item = (Item) adventurer.getUnit(itemId);
+        adventurer.deleteUnit(itemId);
         String className = item.getName();
         int value = 0;
         if (item instanceof Bottle) {
@@ -55,7 +55,7 @@ public class Player {
 
     public String useBottle(int adventurerId, int bottleId) {
         Adventurer adventurer = adventurers.get(adventurerId);
-        String bottleName = adventurer.getItem(bottleId).getName();
+        String bottleName = adventurer.getUnit(bottleId).getName();
         String advName = adventurer.getName();
         int status = adventurer.useBottle(bottleId);
         if (status == 0) {
@@ -70,6 +70,27 @@ public class Player {
 
     public void addFragment(int advId, int fragId, String name) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addFragment(new Fragment(fragId, name, adventurer));
+        adventurer.addUnit(new Fragment(fragId, name, adventurer));
+    }
+
+    public String redeemWarfare(int advId, String name, int welfareId) {
+        Adventurer adventurer = adventurers.get(advId);
+        int status = adventurer.redeemWarfare(name, welfareId);
+        switch (status) {
+            case 0: {
+                Bottle bottle = (Bottle) adventurer.getUnit(welfareId);
+                return bottle.getName() + " " + bottle.getCapacity();
+            }
+            case 1: {
+                Equipment equipment = (Equipment) adventurer.getUnit(welfareId);
+                return equipment.getName() + " " + equipment.getDurability();
+            }
+            case 2: {
+                Bottle bottle = (Bottle) adventurer.getUnit(welfareId);
+                return String.format("Congratulations! HpBottle %s acquired", bottle.getName());
+            }
+            default:
+                return String.format("%d: Not enough fragments collected yet", adventurer.countUnit(name));
+        }
     }
 }
