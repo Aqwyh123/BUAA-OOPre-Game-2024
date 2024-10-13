@@ -21,7 +21,7 @@ public class PlayerTest {
         player.addAdventurer(200, "Bob");
         player.addEquipment(100, 1, "Sword", 100, "Axe", 100);
         player.addBottle(200, 2, "AtkB", 0, "AtkBottle", 10);
-        Assert.assertEquals("Equipment Sword 100", player.deleteItem(100, 1));
+        Assert.assertEquals("Axe Sword 100", player.deleteItem(100, 1));
         player.carryItem(200, 2);
         Assert.assertEquals("AtkBottle AtkB 0", player.deleteItem(200, 2));
         player.reset();

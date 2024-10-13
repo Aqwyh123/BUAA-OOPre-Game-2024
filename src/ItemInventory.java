@@ -6,7 +6,7 @@ public class ItemInventory extends Inventory<Item> {
             Bottle bottle = (Bottle) item;
             int bottleNum = countUnit(bottle.getName(), "Bottle");
             if (bottleNum <= bottle.getOwner().getCombatEffectiveness() / 5 + 1) {
-                addUnit(bottle);
+                super.addUnit(bottle);
             }
         } else if (item instanceof Equipment) {
             Equipment equipment = (Equipment) item;
@@ -16,8 +16,6 @@ public class ItemInventory extends Inventory<Item> {
                     break;
                 }
             }
-            addUnit(item);
-        } else {
             super.addUnit(item);
         }
     }

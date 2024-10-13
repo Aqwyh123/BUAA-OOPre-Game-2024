@@ -38,14 +38,13 @@ public class Player {
         Adventurer adventurer = adventurers.get(adventurerId);
         Item item = (Item) adventurer.getUnit(itemId);
         adventurer.deleteUnit(itemId);
-        String className = item.getName();
         int value = 0;
         if (item instanceof Bottle) {
             value = ((Bottle) item).getCapacity();
         } else if (item instanceof Equipment) {
             value = ((Equipment) item).getDurability();
         }
-        return className + " " + item.getName() + " " + value;
+        return item.getType() + " " + item.getName() + " " + value;
     }
 
     public void carryItem(int adventurerId, int itemId) {
