@@ -1,5 +1,5 @@
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Adventurer extends CombatUnit {
     private static final int ORIGINAL_HIT_POINT = 500;
@@ -123,7 +123,7 @@ public class Adventurer extends CombatUnit {
         }
     }
 
-    public int combat(String equName, HashSet<Adventurer> adventurers) {
+    public int combat(String equName, ArrayList<Adventurer> adventurers) {
         Equipment equipment = backpack.getEquipment(equName);
         if (equipment == null) {
             return -1;

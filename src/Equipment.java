@@ -1,4 +1,4 @@
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class Equipment extends Item {
     private static final int DEFAULT_INCREASE = 1;
@@ -18,7 +18,7 @@ public class Equipment extends Item {
         this.durability += DEFAULT_INCREASE;
     }
 
-    public void used(HashSet<Adventurer> opponents) {
+    public void used(ArrayList<Adventurer> opponents) {
         for (Adventurer opponent : opponents) {
             switch (getType()) {
                 case "Axe": {

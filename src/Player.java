@@ -1,5 +1,5 @@
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class Player {
     private final HashMap<Integer, Adventurer> adventurers = new HashMap<>();
@@ -95,9 +95,9 @@ public class Player {
         }
     }
 
-    public String combat(int fromIds, String equName, HashSet<Integer> toIds) {
+    public String combat(int fromIds, String equName, ArrayList<Integer> toIds) {
         Adventurer from = adventurers.get(fromIds);
-        HashSet<Adventurer> to = new HashSet<>();
+        ArrayList<Adventurer> to = new ArrayList<>();
         for (int id : toIds) {
             to.add(adventurers.get(id));
         }
