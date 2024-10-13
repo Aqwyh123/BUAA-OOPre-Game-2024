@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Adventurer extends CombatUnit {
@@ -104,12 +105,21 @@ public class Adventurer extends CombatUnit {
     }
 
     public int redeemWarfare(String name, int welfareId) {
-        int fragmentNum = countUnit(name, "Fragment");
-        if (fragmentNum < 5) {
+        HashMap<Integer,Unit> fragments = possessions.getUnits(name, "Fragment");
+        if (fragments.size() < 5) {
             return -1;
         } else {
             Fragment fragment = possessions.getFragment(name);
-            return fragment.redeemed(welfareId);
+            int status = fragment.redeemed(welfareId);
+            int count = 0;
+            for(Unit unit : fragments.values()) {
+                possessions.deleteUnit(unit.getId());
+                count++;
+                if (count == 5) {
+                    break;
+                }
+            }
+            return status;
         }
     }
 

@@ -9,7 +9,6 @@ public class Main {
         final Player player = Player.getInstance(); // 获取Player实例
         for (ArrayList<String> command : commands) {
             int adventurerId = Integer.parseInt(command.get(1));
-            int unitId = command.size() > 2 ? Integer.parseInt(command.get(2)) : -1;
             switch (command.get(0)) {
                 case "1": {
                     String name = command.get(2);
@@ -18,6 +17,7 @@ public class Main {
                 }
                 case "2": {
                     String name = command.get(3);
+                    int unitId = Integer.parseInt(command.get(2));
                     int capacity = Integer.parseInt(command.get(4));
                     String type = command.get(5);
                     int ce = Integer.parseInt(command.get(6));
@@ -26,6 +26,7 @@ public class Main {
                 }
                 case "3": {
                     String name = command.get(3);
+                    int unitId = Integer.parseInt(command.get(2));
                     int durability = Integer.parseInt(command.get(4));
                     String type = command.get(5);
                     int ce = Integer.parseInt(command.get(6));
@@ -33,38 +34,43 @@ public class Main {
                     break;
                 }
                 case "4": {
+                    int unitId = Integer.parseInt(command.get(2));
                     System.out.println(player.improveEquipment(adventurerId, unitId));
                     break;
                 }
                 case "5": {
+                    int unitId = Integer.parseInt(command.get(2));
                     System.out.println(player.deleteItem(adventurerId, unitId));
                     break;
                 }
                 case "6": {
+                    int unitId = Integer.parseInt(command.get(2));
                     player.carryItem(adventurerId, unitId);
                     break;
                 }
                 case "7": {
+                    int unitId = Integer.parseInt(command.get(2));
                     System.out.println(player.useBottle(adventurerId, unitId));
                     break;
                 }
                 case "8": {
+                    int unitId = Integer.parseInt(command.get(2));
                     String name = command.get(3);
                     player.addFragment(adventurerId, unitId, name);
                     break;
                 }
                 case "9": {
-                    String name = command.get(3);
-                    int welfareId = Integer.parseInt(command.get(4));
+                    String name = command.get(2);
+                    int welfareId = Integer.parseInt(command.get(3));
                     System.out.println(player.redeemWarfare(adventurerId, name, welfareId));
                     break;
                 }
                 case "10": {
-                    String name = command.get(3);
-                    int adventureNum = Integer.parseInt(command.get(4));
+                    String name = command.get(2);
+                    int adventureNum = Integer.parseInt(command.get(3));
                     HashSet<Integer> adventurerIds = new HashSet<>();
                     for (int i = 0; i < adventureNum; i++) {
-                        adventurerIds.add(Integer.parseInt(command.get(5 + i)));
+                        adventurerIds.add(Integer.parseInt(command.get(4 + i)));
                     }
                     System.out.println(player.combat(adventurerId, name, adventurerIds));
                     break;

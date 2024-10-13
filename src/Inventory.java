@@ -19,6 +19,33 @@ public abstract class Inventory<T> {
         units.remove(id);
     }
 
+    public HashMap<Integer,T> getUnits(String name, String type) {
+        HashMap<Integer, T> result = new HashMap<>();
+        for (T unit : units.values()) {
+            if (((Unit) unit).getName().equals(name)) {
+                switch (type) {
+                    case "Bottle":
+                        if (unit instanceof Bottle) {
+                            result.put(((Unit) unit).getId(), unit);
+                        }
+                        break;
+                    case "Equipment":
+                        if (unit instanceof Equipment) {
+                            result.put(((Unit) unit).getId(), unit);
+                        }
+                        break;
+                    case "Fragment":
+                        if (unit instanceof Fragment) {
+                            result.put(((Unit) unit).getId(), unit);
+                        }
+                        break;
+                    default:
+                }
+            }
+        }
+        return result;
+    }
+
     public int countUnit(String name, String type) {
         int count = 0;
         for (T unit : units.values()) {

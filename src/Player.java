@@ -103,12 +103,12 @@ public class Player {
         }
         int status = from.combat(equName, to);
         String result = "";
-        if (status == 0) {
+        if (status != 0) {
             result = String.format("Adventurer %d defeated", fromIds);
         } else {
             for (Adventurer adventurer : to) {
                 if (adventurer.getHitPoint() > 0) {
-                    result = result.concat(adventurer.getName() + adventurer.getHitPoint() + "\n");
+                    result = result.concat(adventurer.getName() + " " + adventurer.getHitPoint() + "\n");
                 }
             }
         }
