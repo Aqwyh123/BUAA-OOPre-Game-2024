@@ -67,4 +67,9 @@ public class Player {
             return advName + " fail to use " + bottleName;
         }
     }
+
+    public void addFragment(int advId, int fragId, String name) {
+        Adventurer adventurer = adventurers.get(advId);
+        adventurer.addFragment(new Fragment(fragId, name, adventurer));
+    }
 }
