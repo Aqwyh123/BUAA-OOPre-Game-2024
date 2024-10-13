@@ -1,0 +1,24 @@
+public class ItemInventory extends Inventory<Item> {
+
+    @Override
+    public void addUnit(Item item) {
+        if (item instanceof Bottle) {
+            Bottle bottle = (Bottle) item;
+            int bottleNum = countUnit(bottle.getName(), "Bottle");
+            if (bottleNum <= bottle.getOwner().getCombatEffectiveness() / 5 + 1) {
+                addUnit(bottle);
+            }
+        } else if (item instanceof Equipment) {
+            Equipment equipment = (Equipment) item;
+            for (Item equ : getUnits().values()) {
+                if (equ instanceof Equipment && equ.getName().equals(equipment.getName())) {
+                    deleteUnit(equ.getId());
+                    break;
+                }
+            }
+            addUnit(item);
+        } else {
+            super.addUnit(item);
+        }
+    }
+}

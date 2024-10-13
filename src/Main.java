@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Scanner;
 
 public class Main {
@@ -19,16 +20,16 @@ public class Main {
                     String name = command.get(3);
                     int capacity = Integer.parseInt(command.get(4));
                     String type = command.get(5);
-                    int combatEffectiveness = Integer.parseInt(command.get(6));
-                    player.addBottle(adventurerId, unitId, name, capacity, type, combatEffectiveness);
+                    int ce = Integer.parseInt(command.get(6));
+                    player.addBottle(adventurerId, unitId, name, capacity, type, ce);
                     break;
                 }
                 case "3": {
                     String name = command.get(3);
                     int durability = Integer.parseInt(command.get(4));
                     String type = command.get(5);
-                    int combatEffectiveness = Integer.parseInt(command.get(6));
-                    player.addEquipment(adventurerId, unitId, name, durability, type, combatEffectiveness);
+                    int ce = Integer.parseInt(command.get(6));
+                    player.addEquipment(adventurerId, unitId, name, durability, type, ce);
                     break;
                 }
                 case "4": {
@@ -50,11 +51,22 @@ public class Main {
                 case "8": {
                     String name = command.get(3);
                     player.addFragment(adventurerId, unitId, name);
+                    break;
                 }
                 case "9": {
                     String name = command.get(3);
                     int welfareId = Integer.parseInt(command.get(4));
                     System.out.println(player.redeemWarfare(adventurerId, name, welfareId));
+                    break;
+                }
+                case "10": {
+                    String name = command.get(3);
+                    int adventureNum = Integer.parseInt(command.get(4));
+                    HashSet<Integer> adventurerIds = new HashSet<>();
+                    for (int i = 0; i < adventureNum; i++) {
+                        adventurerIds.add(Integer.parseInt(command.get(5 + i)));
+                    }
+                    System.out.println(player.combat(adventurerId, name, adventurerIds));
                 }
                 default:
                     break;

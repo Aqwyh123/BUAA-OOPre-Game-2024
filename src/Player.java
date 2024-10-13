@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Player {
     private static final int DEFAULT_IMPROVEMENT = 1;
@@ -22,9 +23,9 @@ public class Player {
         adventurer.addUnit(new Bottle(botId, name, capacity, type, ce, adventurer));
     }
 
-    public void addEquipment(int advId, int equId, String name, int durability, String type, int ce) {
+    public void addEquipment(int advId, int equId, String name, int dur, String type, int ce) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addUnit(new Equipment(equId, name, durability, type, ce, adventurer));
+        adventurer.addUnit(new Equipment(equId, name, dur, type, ce, adventurer));
     }
 
     public String improveEquipment(int adventurerId, int equipmentId) {
@@ -89,8 +90,14 @@ public class Player {
                 Bottle bottle = (Bottle) adventurer.getUnit(welfareId);
                 return String.format("Congratulations! HpBottle %s acquired", bottle.getName());
             }
-            default:
-                return String.format("%d: Not enough fragments collected yet", adventurer.countUnit(name));
+            default: {
+                int count = adventurer.countUnit(name, "Fragment");
+                return String.format("%d: Not enough fragments collected yet", count);
+            }
         }
+    }
+
+    public String combat(int fromIds, String equName, HashSet<Integer> toIds) {
+        return null;
     }
 }

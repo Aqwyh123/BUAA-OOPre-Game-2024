@@ -5,8 +5,8 @@ public class Adventurer extends CombatUnit {
     private int hitPoint;
     private int attackPoint;
     private int defensePoint;
-    private final Inventory<Item> backpack = new Inventory<>();
-    private final Inventory<Unit> possessions = new Inventory<>();
+    private final ItemInventory backpack = new ItemInventory();
+    private final UnitInventory possessions = new UnitInventory();
 
     public Adventurer(int id, String name) {
         super(id, name, ORIGINAL_ATTACK_POINT + ORIGINAL_DEFENSE_POINT, null);
@@ -56,12 +56,12 @@ public class Adventurer extends CombatUnit {
         possessions.deleteUnit(unitId);
     }
 
-    public int countUnit(String name) {
-        return possessions.countUnit(name);
+    public int countUnit(String name, String type) {
+        return possessions.countUnit(name, type);
     }
 
     public void carryItem(int itemId) {
-        Item item = (Item) getUnit(itemId);
+        Item item = (Item) possessions.getUnit(itemId);
         if (item == null) {
             return;
         }
@@ -98,11 +98,11 @@ public class Adventurer extends CombatUnit {
     }
 
     public int redeemWarfare(String name, int welfareId) {
-        int fragmentNum = countUnit(name);
+        int fragmentNum = countUnit(name, "Fragment");
         if (fragmentNum < 5) {
             return -1;
         } else {
-            Fragment fragment = (Fragment) possessions.getUnit(name);
+            Fragment fragment = possessions.getFragment(name);
             return fragment.redeemed(welfareId);
         }
     }
