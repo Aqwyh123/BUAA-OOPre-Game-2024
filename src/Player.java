@@ -2,7 +2,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class Player {
-    private static final int DEFAULT_IMPROVEMENT = 1;
     private final HashMap<Integer, Adventurer> adventurers = new HashMap<>();
     private static final Player instance = new Player();
 
@@ -30,7 +29,7 @@ public class Player {
 
     public String improveEquipment(int adventurerId, int equipmentId) {
         Adventurer adventurer = adventurers.get(adventurerId);
-        adventurer.improveEquipment(equipmentId, DEFAULT_IMPROVEMENT);
+        adventurer.improveEquipment(equipmentId);
         Equipment equipment = (Equipment) adventurer.getUnit(equipmentId);
         return equipment.getName() + " " + equipment.getDurability();
     }
@@ -98,6 +97,22 @@ public class Player {
     }
 
     public String combat(int fromIds, String equName, HashSet<Integer> toIds) {
-        return null;
+        Adventurer from = adventurers.get(fromIds);
+        HashSet<Adventurer> to = new HashSet<>();
+        for (int id : toIds) {
+            to.add(adventurers.get(id));
+        }
+        int status = from.combat(equName, to);
+        String result = "";
+        if (status == 0) {
+            result = String.format("Adventurer %d defeated", fromIds);
+        } else {
+            for (Adventurer adventurer : to) {
+                if (adventurer.getHitPoint() > 0) {
+                    result = result.concat(adventurer.getName() + adventurer.getHitPoint() + "\n");
+                }
+            }
+        }
+        return result.trim();
     }
 }

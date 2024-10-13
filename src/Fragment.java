@@ -23,7 +23,7 @@ public class Fragment extends Unit {
         }
         if (welfare instanceof Equipment) {
             Equipment equipment = (Equipment) welfare;
-            equipment.improveDurability(1);
+            equipment.increaseDurability();
             return 1;
         }
         return -1;

@@ -21,18 +21,18 @@ public class Bottle extends Item {
         this.isUsed = false;
     }
 
-    public void drunk() {
+    public void used() {
         int ce = this.getCombatEffectiveness();
         int capacity = this.getCapacity();
         switch (this.getType()) {
             case "HpBottle":
-                getOwner().improveHitPoint(this.getCapacity());
+                getOwner().increaseHitPoint(this.getCapacity());
                 break;
             case "AtkBottle":
-                getOwner().improveAttackPoint(ce + (int) Math.floor(capacity / RATIO));
+                getOwner().increaseAttackPoint(ce + (int) Math.floor(capacity / RATIO));
                 break;
             case "DefBottle":
-                getOwner().improveDefensePoint(ce + (int) Math.floor(capacity / RATIO));
+                getOwner().increaseDefensePoint(ce + (int) Math.floor(capacity / RATIO));
                 break;
             default:
                 break;

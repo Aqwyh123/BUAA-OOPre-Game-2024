@@ -1,3 +1,5 @@
+import java.util.HashSet;
+
 public class Adventurer extends CombatUnit {
     private static final int ORIGINAL_HIT_POINT = 500;
     private static final int ORIGINAL_ATTACK_POINT = 1;
@@ -27,15 +29,23 @@ public class Adventurer extends CombatUnit {
         return defensePoint;
     }
 
-    public void improveHitPoint(int hitPoint) {
+    public void setHitPoint(int hitPoint) {
+        this.hitPoint = hitPoint;
+    }
+
+    public void increaseHitPoint(int hitPoint) {
         this.hitPoint += hitPoint;
     }
 
-    public void improveAttackPoint(int attackPoint) {
+    public void decreaseHitPoint(int hitPoint) {
+        this.hitPoint -= hitPoint;
+    }
+
+    public void increaseAttackPoint(int attackPoint) {
         this.attackPoint += attackPoint;
     }
 
-    public void improveDefensePoint(int defensePoint) {
+    public void increaseDefensePoint(int defensePoint) {
         this.defensePoint += defensePoint;
     }
 
@@ -43,12 +53,8 @@ public class Adventurer extends CombatUnit {
         return possessions.getUnit(unitId);
     }
 
-    public void addUnit(Item item) {
-        possessions.addUnit(item);
-    }
-
-    public void addUnit(Fragment fragment) {
-        possessions.addUnit(fragment);
+    public void addUnit(Unit unit) {
+        possessions.addUnit(unit);
     }
 
     public void deleteUnit(int unitId) {
@@ -84,17 +90,17 @@ public class Adventurer extends CombatUnit {
             this.deleteUnit(bottleId);
             return 0;
         } else {
-            bottle.drunk();
+            bottle.used();
             return 0;
         }
     }
 
-    public void improveEquipment(int equipmentId, int durability) {
+    public void improveEquipment(int equipmentId) {
         Equipment equipment = (Equipment) possessions.getUnit(equipmentId);
         if (equipment == null) {
             return;
         }
-        equipment.improveDurability(durability);
+        equipment.increaseDurability();
     }
 
     public int redeemWarfare(String name, int welfareId) {
@@ -105,5 +111,25 @@ public class Adventurer extends CombatUnit {
             Fragment fragment = possessions.getFragment(name);
             return fragment.redeemed(welfareId);
         }
+    }
+
+    public int combat(String equName, HashSet<Adventurer> adventurers) {
+        Equipment equipment = backpack.getEquipment(equName);
+        if (equipment == null) {
+            return -1;
+        }
+        int overallAttack = this.attackPoint + equipment.getCombatEffectiveness();
+        int overallDefense = 0;
+        for (Adventurer adventurer : adventurers) {
+            overallDefense = Math.max(overallDefense, adventurer.defensePoint);
+        }
+        if (overallAttack <= overallDefense) {
+            return -1;
+        }
+        equipment.used(adventurers);
+        if (equipment.getDurability() == 0) {
+            deleteUnit(equipment.getId());
+        }
+        return 0;
     }
 }

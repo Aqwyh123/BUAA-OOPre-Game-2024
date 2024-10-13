@@ -21,4 +21,13 @@ public class ItemInventory extends Inventory<Item> {
             super.addUnit(item);
         }
     }
+
+    public Equipment getEquipment(String name) {
+        for (Item item : getUnits().values()) {
+            if (item instanceof Equipment && item.getName().equals(name)) {
+                return (Equipment) item;
+            }
+        }
+        return null;
+    }
 }
