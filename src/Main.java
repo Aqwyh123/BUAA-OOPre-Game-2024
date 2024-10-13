@@ -67,6 +67,7 @@ public class Main {
                         adventurerIds.add(Integer.parseInt(command.get(5 + i)));
                     }
                     System.out.println(player.combat(adventurerId, name, adventurerIds));
+                    break;
                 }
                 default:
                     break;
