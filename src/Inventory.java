@@ -11,14 +11,6 @@ public abstract class Inventory<T> {
         return units;
     }
 
-    public void addUnit(T unit) {
-        units.put(((Unit) unit).getId(), unit);
-    }
-
-    public void deleteUnit(int id) {
-        units.remove(id);
-    }
-
     public HashMap<Integer,T> getUnits(String name, String type) {
         HashMap<Integer, T> result = new HashMap<>();
         for (T unit : units.values()) {
@@ -44,6 +36,14 @@ public abstract class Inventory<T> {
             }
         }
         return result;
+    }
+
+    public void addUnit(T unit) {
+        units.put(((Unit) unit).getId(), unit);
+    }
+
+    public void deleteUnit(int id) {
+        units.remove(id);
     }
 
     public int countUnit(String name, String type) {

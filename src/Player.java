@@ -97,18 +97,18 @@ public class Player {
 
     public String combat(int fromIds, String equName, ArrayList<Integer> toIds) {
         Adventurer from = adventurers.get(fromIds);
-        ArrayList<Adventurer> to = new ArrayList<>();
+        ArrayList<Adventurer> toAdvs = new ArrayList<>();
         for (int id : toIds) {
-            to.add(adventurers.get(id));
+            toAdvs.add(adventurers.get(id));
         }
-        int status = from.combat(equName, to);
+        int status = from.combat(equName, toAdvs);
         String result = "";
         if (status != 0) {
             result = String.format("Adventurer %d defeated", fromIds);
         } else {
-            for (Adventurer adventurer : to) {
-                if (adventurer.getHitPoint() > 0) {
-                    result = result.concat(adventurer.getName() + " " + adventurer.getHitPoint() + "\n");
+            for (Adventurer toAdv : toAdvs) {
+                if (toAdv.getHitPoint() > 0) {
+                    result = result.concat(toAdv.getName() + " " + toAdv.getHitPoint() + "\n");
                 }
             }
         }

@@ -105,14 +105,14 @@ public class Adventurer extends CombatUnit {
     }
 
     public int redeemWarfare(String name, int welfareId) {
-        HashMap<Integer,Unit> fragments = possessions.getUnits(name, "Fragment");
+        HashMap<Integer, Unit> fragments = possessions.getUnits(name, "Fragment");
         if (fragments.size() < 5) {
             return -1;
         } else {
             Fragment fragment = possessions.getFragment(name);
             int status = fragment.redeemed(welfareId);
             int count = 0;
-            for(Unit unit : fragments.values()) {
+            for (Unit unit : fragments.values()) {
                 possessions.deleteUnit(unit.getId());
                 count++;
                 if (count == 5) {

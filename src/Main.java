@@ -19,7 +19,7 @@ public class Main {
                 int attribution = Integer.parseInt(command.get(4));
                 String type = command.get(5);
                 int ce = Integer.parseInt(command.get(6));
-                if (Objects.equals(op, "2")) {
+                if (Objects.equals(op, "3")) {
                     player.addEquipment(adventurerId, unitId, name, attribution, type, ce);
                 } else {
                     player.addBottle(adventurerId, unitId, name, attribution, type, ce);
