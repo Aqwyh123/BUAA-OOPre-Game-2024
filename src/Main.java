@@ -8,6 +8,7 @@ public class Main {
         final Player player = Player.getInstance(); // 获取Player实例
         for (ArrayList<String> command : commands) {
             int adventurerId = Integer.parseInt(command.get(1));
+            int unitId = command.size() > 2 ? Integer.parseInt(command.get(2)) : -1;
             switch (command.get(0)) {
                 case "1": {
                     String name = command.get(2);
@@ -15,40 +16,35 @@ public class Main {
                     break;
                 }
                 case "2": {
-                    int id = Integer.parseInt(command.get(2));
                     String name = command.get(3);
                     int capacity = Integer.parseInt(command.get(4));
                     String type = command.get(5);
                     int combatEffectiveness = Integer.parseInt(command.get(6));
-                    player.addBottle(adventurerId, id, name, capacity, type, combatEffectiveness);
+                    player.addBottle(adventurerId, unitId, name, capacity, type, combatEffectiveness);
                     break;
                 }
                 case "3": {
-                    int id = Integer.parseInt(command.get(2));
                     String name = command.get(3);
                     int durability = Integer.parseInt(command.get(4));
-                    int combatEffectiveness = Integer.parseInt(command.get(5));
-                    player.addEquipment(adventurerId, id, name, durability, combatEffectiveness);
+                    String type = command.get(5);
+                    int combatEffectiveness = Integer.parseInt(command.get(6));
+                    player.addEquipment(adventurerId, unitId, name, durability, type, combatEffectiveness);
                     break;
                 }
                 case "4": {
-                    int equipmentId = Integer.parseInt(command.get(2));
-                    System.out.println(player.improveEquipment(adventurerId, equipmentId));
+                    System.out.println(player.improveEquipment(adventurerId, unitId));
                     break;
                 }
                 case "5": {
-                    int itemId = Integer.parseInt(command.get(2));
-                    System.out.println(player.deleteItem(adventurerId, itemId));
+                    System.out.println(player.deleteItem(adventurerId, unitId));
                     break;
                 }
                 case "6": {
-                    int itemId = Integer.parseInt(command.get(2));
-                    player.carryItem(adventurerId, itemId);
+                    player.carryItem(adventurerId, unitId);
                     break;
                 }
                 case "7": {
-                    int bottleId = Integer.parseInt(command.get(2));
-                    System.out.println(player.useBottle(adventurerId, bottleId));
+                    System.out.println(player.useBottle(adventurerId, unitId));
                     break;
                 }
                 default:

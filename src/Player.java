@@ -22,9 +22,9 @@ public class Player {
         adventurer.addItem(new Bottle(botId, name, capacity, type, ce, adventurer));
     }
 
-    public void addEquipment(int advId, int equId, String name, int durability, int ce) {
+    public void addEquipment(int advId, int equId, String name, int durability, String type, int ce) {
         Adventurer adventurer = adventurers.get(advId);
-        adventurer.addItem(new Equipment(equId, name, durability, ce, adventurer));
+        adventurer.addItem(new Equipment(equId, name, durability, type, ce, adventurer));
     }
 
     public String improveEquipment(int adventurerId, int equipmentId) {
@@ -38,25 +38,11 @@ public class Player {
         Adventurer adventurer = adventurers.get(adventurerId);
         Item item = adventurer.getItem(itemId);
         adventurer.deleteItem(itemId);
-        String className = null;
+        String className = item.getName();
         int value = 0;
         if (item instanceof Bottle) {
-            switch (((Bottle) item).getType()) {
-                case "HpBottle":
-                    className = "HpBottle";
-                    break;
-                case "AtkBottle":
-                    className = "AtkBottle";
-                    break;
-                case "DefBottle":
-                    className = "DefBottle";
-                    break;
-                default:
-                    break;
-            }
             value = ((Bottle) item).getCapacity();
         } else if (item instanceof Equipment) {
-            className = "Equipment";
             value = ((Equipment) item).getDurability();
         }
         return className + " " + item.getName() + " " + value;

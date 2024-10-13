@@ -8,8 +8,8 @@ public class PlayerTest {
     public void improveEquipment() {
         player.addAdventurer(100, "Alice");
         player.addAdventurer(200, "Bob");
-        player.addEquipment(100, 1, "Sword", 100, 100);
-        player.addEquipment(200, 2, "Shield", 10, 10);
+        player.addEquipment(100, 1, "Sword", 100, "Axe", 100);
+        player.addEquipment(200, 2, "Shield", 10, "Axe", 10);
         Assert.assertEquals("Sword 101", player.improveEquipment(100, 1));
         Assert.assertEquals("Shield 11", player.improveEquipment(200, 2));
         player.reset();
@@ -19,7 +19,7 @@ public class PlayerTest {
     public void deleteItem() {
         player.addAdventurer(100, "Alice");
         player.addAdventurer(200, "Bob");
-        player.addEquipment(100, 1, "Sword", 100, 100);
+        player.addEquipment(100, 1, "Sword", 100, "Axe", 100);
         player.addBottle(200, 2, "AtkB", 0, "AtkBottle", 10);
         Assert.assertEquals("Equipment Sword 100", player.deleteItem(100, 1));
         player.carryItem(200, 2);
