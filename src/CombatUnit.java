@@ -1,5 +1,5 @@
 public abstract class CombatUnit extends Unit {
-    private final int combatEffectiveness;
+    private int combatEffectiveness;
 
     protected CombatUnit(int id, String name, int combatEffectiveness, Adventurer owner) {
         super(id, name, owner);
@@ -8,5 +8,9 @@ public abstract class CombatUnit extends Unit {
 
     public int getCombatEffectiveness() {
         return this.combatEffectiveness;
+    }
+
+    protected void setCombatEffectiveness(int combatEffectiveness) {
+        this.combatEffectiveness = combatEffectiveness;
     }
 }

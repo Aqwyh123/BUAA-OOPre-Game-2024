@@ -18,6 +18,10 @@ public class Adventurer extends CombatUnit {
         this.defensePoint = ORIGINAL_DEFENSE_POINT;
     }
 
+    public void updateCombatEffectiveness() {
+        this.setCombatEffectiveness(this.attackPoint + this.defensePoint);
+    }
+
     public int getHitPoint() {
         return hitPoint;
     }
@@ -44,10 +48,12 @@ public class Adventurer extends CombatUnit {
 
     public void increaseAttackPoint(int attackPoint) {
         this.attackPoint += attackPoint;
+        updateCombatEffectiveness();
     }
 
     public void increaseDefensePoint(int defensePoint) {
         this.defensePoint += defensePoint;
+        updateCombatEffectiveness();
     }
 
     public Unit getUnit(int unitId) {
