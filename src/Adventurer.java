@@ -18,7 +18,6 @@ public class Adventurer extends Unit implements Combatable {
         this.defensePoint = ORIGINAL_DEFENSE_POINT;
     }
 
-
     @Override
     public int getCombatEffectiveness() {
         return this.attackPoint + this.defensePoint;
@@ -57,7 +56,7 @@ public class Adventurer extends Unit implements Combatable {
     }
 
     public void deleteUnit(int unitId) {
-        if(backpack.getUnit(unitId) != null) {
+        if (backpack.getUnit(unitId) != null) {
             this.discardItem(unitId);
         }
         possessions.deleteUnit(unitId);
@@ -65,6 +64,10 @@ public class Adventurer extends Unit implements Combatable {
 
     public int countFragment(String name) {
         return possessions.countUnit(name, "Fragment");
+    }
+
+    public int getBottleLimit() {
+        return this.getCombatEffectiveness() / 5 + 1;
     }
 
     public void carryItem(int itemId) {
@@ -100,7 +103,7 @@ public class Adventurer extends Unit implements Combatable {
 
     public int redeemWarfare(String name, int welfareId) {
         HashMap<Integer, Unit> fragments = possessions.getUnits(name, "Fragment");
-        if (fragments.size() < 5) {
+        if (fragments.size() < Fragment.REDEEMABLE_NUMBER) {
             return -1;
         } else {
             Fragment fragmentInstance = (Fragment) fragments.values().iterator().next();
@@ -109,7 +112,7 @@ public class Adventurer extends Unit implements Combatable {
             for (Unit fragment : fragments.values()) {
                 possessions.deleteUnit(fragment.getId());
                 count++;
-                if (count == 5) {
+                if (count == Fragment.REDEEMABLE_NUMBER) {
                     break;
                 }
             }
@@ -130,7 +133,7 @@ public class Adventurer extends Unit implements Combatable {
         if (overallAttack <= overallDefense) {
             return -1;
         }
-        equipment.used(adventurers);
+        equipment.use(adventurers);
         if (equipment.getDurability() == 0) {
             deleteUnit(equipment.getId());
         }

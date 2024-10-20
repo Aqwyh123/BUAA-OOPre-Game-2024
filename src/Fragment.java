@@ -3,6 +3,7 @@ public class Fragment extends Unit {
     private static final int DEFAULT_CAPACITY = 100;
     private static final String DEFAULT_TYPE = "HpBottle";
     private static final int DEFAULT_CE = 0;
+    public static final int REDEEMABLE_NUMBER = 5;
 
     public Fragment(int id, String name, Adventurer owner) {
         super(id, name, owner);

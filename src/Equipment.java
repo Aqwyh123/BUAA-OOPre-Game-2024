@@ -18,7 +18,7 @@ public class Equipment extends Item {
         this.durability += DEFAULT_INCREASE;
     }
 
-    public void used(ArrayList<Adventurer> opponents) {
+    public void use(ArrayList<Adventurer> opponents) {
         for (Adventurer opponent : opponents) {
             switch (getType()) {
                 case "Axe": {
