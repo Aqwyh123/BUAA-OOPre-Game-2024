@@ -63,7 +63,7 @@ public class Player {
             int def = adventurer.getDefensePoint();
             return advName + " " + hp + " " + atk + " " + def;
         } else {
-            return advName + " fail to use " + bottleName;
+            return String.format("%s fail to use %s", advName, bottleName);
         }
     }
 
@@ -89,24 +89,24 @@ public class Player {
                 return String.format("Congratulations! HpBottle %s acquired", bottle.getName());
             }
             default: {
-                int count = adventurer.countUnit(name, "Fragment");
+                int count = adventurer.countFragment(name);
                 return String.format("%d: Not enough fragments collected yet", count);
             }
         }
     }
 
-    public String combat(int fromIds, String equName, ArrayList<Integer> toIds) {
-        Adventurer from = adventurers.get(fromIds);
-        ArrayList<Adventurer> toAdvs = new ArrayList<>();
+    public String combat(int fromId, String equName, ArrayList<Integer> toIds) {
+        Adventurer from = adventurers.get(fromId);
+        ArrayList<Adventurer> to = new ArrayList<>();
         for (int id : toIds) {
-            toAdvs.add(adventurers.get(id));
+            to.add(adventurers.get(id));
         }
-        int status = from.combat(equName, toAdvs);
+        int status = from.combat(equName, to);
         String result = "";
         if (status != 0) {
-            result = String.format("Adventurer %d defeated", fromIds);
+            result = String.format("Adventurer %d defeated", fromId);
         } else {
-            for (Adventurer toAdv : toAdvs) {
+            for (Adventurer toAdv : to) {
                 if (toAdv.getHitPoint() > 0) {
                     result = result.concat(toAdv.getName() + " " + toAdv.getHitPoint() + "\n");
                 }

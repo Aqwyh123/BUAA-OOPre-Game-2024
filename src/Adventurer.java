@@ -8,8 +8,8 @@ public class Adventurer extends CombatUnit {
     private int hitPoint;
     private int attackPoint;
     private int defensePoint;
-    private final ItemInventory backpack = new ItemInventory();
-    private final UnitInventory possessions = new UnitInventory();
+    private final ItemInventory backpack = new ItemInventory(this);
+    private final Inventory<Unit> possessions = new Inventory<>(this);
 
     public Adventurer(int id, String name) {
         super(id, name, ORIGINAL_ATTACK_POINT + ORIGINAL_DEFENSE_POINT, null);
@@ -38,21 +38,13 @@ public class Adventurer extends CombatUnit {
         this.hitPoint = hitPoint;
     }
 
-    public void increaseHitPoint(int hitPoint) {
-        this.hitPoint += hitPoint;
-    }
-
-    public void decreaseHitPoint(int hitPoint) {
-        this.hitPoint -= hitPoint;
-    }
-
-    public void increaseAttackPoint(int attackPoint) {
-        this.attackPoint += attackPoint;
+    public void setAttackPoint(int attackPoint) {
+        this.attackPoint = attackPoint;
         updateCombatEffectiveness();
     }
 
-    public void increaseDefensePoint(int defensePoint) {
-        this.defensePoint += defensePoint;
+    public void setDefensePoint(int defensePoint) {
+        this.defensePoint = defensePoint;
         updateCombatEffectiveness();
     }
 
@@ -69,23 +61,19 @@ public class Adventurer extends CombatUnit {
         possessions.deleteUnit(unitId);
     }
 
-    public int countUnit(String name, String type) {
-        return possessions.countUnit(name, type);
+    public int countFragment(String name) {
+        return possessions.countUnit(name, "Fragment");
     }
 
     public void carryItem(int itemId) {
         Item item = (Item) possessions.getUnit(itemId);
-        if (item == null) {
-            return;
-        }
+        assert item != null;
         backpack.addUnit(item);
     }
 
     public void discardItem(int itemId) {
         Item item = backpack.getUnit(itemId);
-        if (item == null) {
-            return;
-        }
+        assert item != null;
         backpack.deleteUnit(itemId);
     }
 
@@ -97,17 +85,15 @@ public class Adventurer extends CombatUnit {
             this.deleteUnit(bottleId);
             return 0;
         } else {
-            bottle.used();
+            bottle.use();
             return 0;
         }
     }
 
     public void improveEquipment(int equipmentId) {
         Equipment equipment = (Equipment) possessions.getUnit(equipmentId);
-        if (equipment == null) {
-            return;
-        }
-        equipment.increaseDurability();
+        assert equipment != null;
+        equipment.improve();
     }
 
     public int redeemWarfare(String name, int welfareId) {
@@ -115,11 +101,11 @@ public class Adventurer extends CombatUnit {
         if (fragments.size() < 5) {
             return -1;
         } else {
-            Fragment fragment = possessions.getFragment(name);
-            int status = fragment.redeemed(welfareId);
+            Fragment fragmentInstance = (Fragment) fragments.values().iterator().next();
+            int status = fragmentInstance.redeemed(welfareId);
             int count = 0;
-            for (Unit unit : fragments.values()) {
-                possessions.deleteUnit(unit.getId());
+            for (Unit fragment : fragments.values()) {
+                possessions.deleteUnit(fragment.getId());
                 count++;
                 if (count == 5) {
                     break;

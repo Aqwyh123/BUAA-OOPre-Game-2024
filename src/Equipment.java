@@ -14,7 +14,7 @@ public class Equipment extends Item {
         return this.durability;
     }
 
-    public void increaseDurability() {
+    public void improve() {
         this.durability += DEFAULT_INCREASE;
     }
 
@@ -29,12 +29,14 @@ public class Equipment extends Item {
                     int ce = this.getCombatEffectiveness();
                     int ownerAP = getOwner().getAttackPoint();
                     int opponentDP = opponent.getDefensePoint();
-                    opponent.decreaseHitPoint(ce + ownerAP - opponentDP);
+                    int decrease = ce + ownerAP - opponentDP;
+                    opponent.setHitPoint(opponent.getHitPoint() - decrease);
                     break;
                 }
                 case "Blade": {
                     int ce = this.getCombatEffectiveness();
-                    opponent.decreaseHitPoint(ce + getOwner().getAttackPoint());
+                    int decrease = ce + getOwner().getAttackPoint();
+                    opponent.setHitPoint(opponent.getHitPoint() - decrease);
                     break;
                 }
                 default:

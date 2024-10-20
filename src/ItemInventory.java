@@ -1,30 +1,32 @@
+import java.util.HashMap;
+
 public class ItemInventory extends Inventory<Item> {
+
+    public ItemInventory(Adventurer owner) {
+        super(owner);
+    }
 
     @Override
     public void addUnit(Item item) {
         if (item instanceof Bottle) {
             Bottle bottle = (Bottle) item;
             int bottleNum = countUnit(bottle.getName(), "Bottle");
-            if (bottleNum < bottle.getOwner().getCombatEffectiveness() / 5 + 1) {
+            if (bottleNum < getOwner().getCombatEffectiveness() / 5 + 1) {
                 super.addUnit(bottle);
             }
         } else if (item instanceof Equipment) {
-            Equipment equipment = (Equipment) item;
-            for (Item equ : getUnits().values()) {
-                if (equ instanceof Equipment && equ.getName().equals(equipment.getName())) {
-                    deleteUnit(equ.getId());
-                    break;
-                }
+            Equipment haveEquipment = getEquipment(item.getName());
+            if (haveEquipment != null) {
+                deleteUnit(haveEquipment.getId());
             }
             super.addUnit(item);
         }
     }
 
     public Equipment getEquipment(String name) {
-        for (Item item : getUnits().values()) {
-            if (item instanceof Equipment && item.getName().equals(name)) {
-                return (Equipment) item;
-            }
+        HashMap<Integer, Item> equipments = getUnits(name, "Equipment");
+        for (Item item : equipments.values()) {
+            return (Equipment) item;
         }
         return null;
     }

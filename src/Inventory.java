@@ -1,45 +1,50 @@
 import java.util.HashMap;
 
-public abstract class Inventory<T> {
+public class Inventory<T extends Unit> {
+    private final Adventurer owner;
     private final HashMap<Integer, T> units = new HashMap<>();
+
+    public Inventory(Adventurer owner) {
+        this.owner = owner;
+    }
+
+    public Adventurer getOwner() {
+        return owner;
+    }
 
     public T getUnit(int itemId) {
         return units.get(itemId);
     }
 
-    protected HashMap<Integer, T> getUnits() {
-        return units;
-    }
-
-    public HashMap<Integer,T> getUnits(String name, String type) {
-        HashMap<Integer, T> result = new HashMap<>();
+    public HashMap<Integer, T> getUnits(String name, String type) {
+        HashMap<Integer, T> filteredUnits = new HashMap<>();
         for (T unit : units.values()) {
-            if (((Unit) unit).getName().equals(name)) {
+            if (unit.getName().equals(name)) {
                 switch (type) {
                     case "Bottle":
                         if (unit instanceof Bottle) {
-                            result.put(((Unit) unit).getId(), unit);
+                            filteredUnits.put(unit.getId(), unit);
                         }
                         break;
                     case "Equipment":
                         if (unit instanceof Equipment) {
-                            result.put(((Unit) unit).getId(), unit);
+                            filteredUnits.put(unit.getId(), unit);
                         }
                         break;
                     case "Fragment":
                         if (unit instanceof Fragment) {
-                            result.put(((Unit) unit).getId(), unit);
+                            filteredUnits.put(unit.getId(), unit);
                         }
                         break;
                     default:
                 }
             }
         }
-        return result;
+        return filteredUnits;
     }
 
     public void addUnit(T unit) {
-        units.put(((Unit) unit).getId(), unit);
+        units.put(unit.getId(), unit);
     }
 
     public void deleteUnit(int id) {
@@ -49,7 +54,7 @@ public abstract class Inventory<T> {
     public int countUnit(String name, String type) {
         int count = 0;
         for (T unit : units.values()) {
-            if (((Unit) unit).getName().equals(name)) {
+            if (unit.getName().equals(name)) {
                 switch (type) {
                     case "Bottle":
                         if (unit instanceof Bottle) {

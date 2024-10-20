@@ -21,19 +21,24 @@ public class Bottle extends Item {
         this.isUsed = false;
     }
 
-    public void used() {
+    public void use() {
         int ce = this.getCombatEffectiveness();
-        int capacity = this.getCapacity();
+        Adventurer owner = this.getOwner();
         switch (this.getType()) {
-            case "HpBottle":
-                getOwner().increaseHitPoint(this.getCapacity());
+            case "HpBottle": {
+                owner.setHitPoint(owner.getHitPoint() + capacity);
                 break;
-            case "AtkBottle":
-                getOwner().increaseAttackPoint(ce + (int) Math.floor(capacity / RATIO));
+            }
+            case "AtkBottle": {
+                int increase = ce + (int) Math.floor(capacity / RATIO);
+                owner.setAttackPoint(owner.getAttackPoint() + increase);
                 break;
-            case "DefBottle":
-                getOwner().increaseDefensePoint(ce + (int) Math.floor(capacity / RATIO));
+            }
+            case "DefBottle": {
+                int increase = ce + (int) Math.floor(capacity / RATIO);
+                owner.setDefensePoint(owner.getDefensePoint() + increase);
                 break;
+            }
             default:
                 break;
         }
