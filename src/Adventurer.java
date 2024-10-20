@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Adventurer extends CombatUnit {
+public class Adventurer extends Unit implements Combatable {
     private static final int ORIGINAL_HIT_POINT = 500;
     private static final int ORIGINAL_ATTACK_POINT = 1;
     private static final int ORIGINAL_DEFENSE_POINT = 0;
@@ -12,14 +12,16 @@ public class Adventurer extends CombatUnit {
     private final Inventory<Unit> possessions = new Inventory<>(this);
 
     public Adventurer(int id, String name) {
-        super(id, name, ORIGINAL_ATTACK_POINT + ORIGINAL_DEFENSE_POINT, null);
+        super(id, name, null);
         this.hitPoint = ORIGINAL_HIT_POINT;
         this.attackPoint = ORIGINAL_ATTACK_POINT;
         this.defensePoint = ORIGINAL_DEFENSE_POINT;
     }
 
-    public void updateCombatEffectiveness() {
-        this.setCombatEffectiveness(this.attackPoint + this.defensePoint);
+
+    @Override
+    public int getCombatEffectiveness() {
+        return this.attackPoint + this.defensePoint;
     }
 
     public int getHitPoint() {
@@ -40,12 +42,10 @@ public class Adventurer extends CombatUnit {
 
     public void setAttackPoint(int attackPoint) {
         this.attackPoint = attackPoint;
-        updateCombatEffectiveness();
     }
 
     public void setDefensePoint(int defensePoint) {
         this.defensePoint = defensePoint;
-        updateCombatEffectiveness();
     }
 
     public Unit getUnit(int unitId) {
@@ -57,7 +57,9 @@ public class Adventurer extends CombatUnit {
     }
 
     public void deleteUnit(int unitId) {
-        this.discardItem(unitId);
+        if(backpack.getUnit(unitId) != null) {
+            this.discardItem(unitId);
+        }
         possessions.deleteUnit(unitId);
     }
 

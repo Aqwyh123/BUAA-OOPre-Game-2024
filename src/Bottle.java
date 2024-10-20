@@ -4,7 +4,7 @@ public class Bottle extends Item {
     private static final double RATIO = 100.0;
 
     public Bottle(int id, String name, int capacity, String type, int ce, Adventurer owner) {
-        super(id, name, ce, type, owner);
+        super(id, name, type, ce, owner);
         this.capacity = capacity;
         this.isUsed = false;
     }

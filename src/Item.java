@@ -1,12 +1,19 @@
-public abstract class Item extends CombatUnit {
+public abstract class Item extends Unit implements Combatable {
     private final String type;
+    private final int combatEffectiveness;
 
-    protected Item(int id, String name, int combatEffectiveness, String type, Adventurer owner) {
-        super(id, name, combatEffectiveness, owner);
+    protected Item(int id, String name, String type, int ce, Adventurer owner) {
+        super(id, name, owner);
         this.type = type;
+        this.combatEffectiveness = ce;
     }
 
     public String getType() {
         return this.type;
+    }
+
+    @Override
+    public int getCombatEffectiveness() {
+        return this.combatEffectiveness;
     }
 }
