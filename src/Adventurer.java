@@ -40,9 +40,12 @@ public class Adventurer extends Unit implements Combatable {
     }
 
     public void setHitPoint(int hitPoint) {
+        boolean isDecrease = hitPoint < this.hitPoint;
         this.hitPoint = hitPoint;
-        for (Adventurer employee : assistEmployerAttackPoint.keySet()) {
-            employee.processCombatFor(this);
+        if (isDecrease) {
+            for (Adventurer employee : employees) {
+                employee.processCombatFor(this);
+            }
         }
     }
 
@@ -223,13 +226,13 @@ public class Adventurer extends Unit implements Combatable {
         return -1;
     }
 
-    public void processCombatFor(Adventurer employer) {
+    private void processCombatFor(Adventurer employer) {
         if (employer.getHitPoint() <= assistEmployerAttackPoint.get(employer) / 2) {
             this.assist(employer);
         }
     }
 
-    public void assist(Adventurer employer) {
+    private void assist(Adventurer employer) {
         HashMap<Integer, Item> equipments = backpack.getUnits("Equipment");
         for (Item item : equipments.values()) {
             Equipment equipment = (Equipment) item;
@@ -242,5 +245,64 @@ public class Adventurer extends Unit implements Combatable {
         if (count > 3) {
             employer.dismiss(this);
         }
+    }
+
+    public String challenge() {
+        int overallCombatEffectiveness = 0;
+        overallCombatEffectiveness += this.getCombatEffectiveness();
+        for (Item item : backpack.getUnits("Item").values()) {
+            overallCombatEffectiveness += item.getCombatEffectiveness();
+        }
+        for (Adventurer employee : employees) {
+            overallCombatEffectiveness += employee.getCombatEffectiveness();
+        }
+
+        String result = "";
+
+        if (overallCombatEffectiveness <= 1000) {
+            return result.trim();
+        }
+        result = result.concat("Cloak of Shadows\n");
+        this.setDefensePoint(getDefensePoint() + 40);
+        for (Adventurer employee : employees) {
+            employee.setDefensePoint(employee.getDefensePoint() + 40);
+        }
+
+        if (overallCombatEffectiveness <= 2000) {
+            return result.trim();
+        }
+        result = result.concat("Flamebrand Sword\n");
+        this.setAttackPoint(getAttackPoint() + 40);
+        for (Adventurer employee : employees) {
+            employee.setAttackPoint(employee.getAttackPoint() + 40);
+        }
+
+        if (overallCombatEffectiveness <= 3000) {
+            return result.trim();
+        }
+        result = result.concat("Stoneheart Amulet\n");
+        this.setDefensePoint(getDefensePoint() + 40);
+        for (Adventurer employee : employees) {
+            employee.setDefensePoint(employee.getDefensePoint() + 40);
+        }
+
+        if (overallCombatEffectiveness <= 4000) {
+            return result.trim();
+        }
+        result = result.concat("Windrunner Boots\n");
+        this.setDefensePoint(getDefensePoint() + 30);
+        for (Adventurer employee : employees) {
+            employee.setDefensePoint(employee.getDefensePoint() + 30);
+        }
+
+        if (overallCombatEffectiveness <= 5000) {
+            return result.trim();
+        }
+        result = result.concat("Frostbite Staff\n");
+        this.setAttackPoint(getAttackPoint() + 50);
+        for (Adventurer employee : employees) {
+            employee.setAttackPoint(employee.getAttackPoint() + 50);
+        }
+        return result.trim();
     }
 }

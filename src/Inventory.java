@@ -19,8 +19,28 @@ public class Inventory<T extends Unit> implements Ownable {
     public HashMap<Integer, T> getUnits(String type) {
         HashMap<Integer, T> filteredUnits = new HashMap<>();
         for (T unit : units.values()) {
-            if (unit.getClass().getSimpleName().equals(type)) {
-                filteredUnits.put(unit.getId(), unit);
+            switch (type) {
+                case "Item":
+                    if (unit instanceof Item) {
+                        filteredUnits.put(unit.getId(), unit);
+                    }
+                    break;
+                case "Bottle":
+                    if (unit instanceof Bottle) {
+                        filteredUnits.put(unit.getId(), unit);
+                    }
+                    break;
+                case "Equipment":
+                    if (unit instanceof Equipment) {
+                        filteredUnits.put(unit.getId(), unit);
+                    }
+                    break;
+                case "Fragment":
+                    if (unit instanceof Fragment) {
+                        filteredUnits.put(unit.getId(), unit);
+                    }
+                    break;
+                default:
             }
         }
         return filteredUnits;
@@ -31,6 +51,11 @@ public class Inventory<T extends Unit> implements Ownable {
         for (T unit : units.values()) {
             if (unit.getName().equals(name)) {
                 switch (type) {
+                    case "Item":
+                        if (unit instanceof Item) {
+                            filteredUnits.put(unit.getId(), unit);
+                        }
+                        break;
                     case "Bottle":
                         if (unit instanceof Bottle) {
                             filteredUnits.put(unit.getId(), unit);
@@ -66,6 +91,11 @@ public class Inventory<T extends Unit> implements Ownable {
         for (T unit : units.values()) {
             if (unit.getName().equals(name)) {
                 switch (type) {
+                    case "Item":
+                        if (unit instanceof Item) {
+                            count++;
+                        }
+                        break;
                     case "Bottle":
                         if (unit instanceof Bottle) {
                             count++;

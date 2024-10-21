@@ -59,6 +59,11 @@ public class Game {
         } else if (Objects.equals(op, "11")) {
             int employeeId = Integer.parseInt(command.get(2));
             employ(adventurerId, employeeId);
+        } else if(Objects.equals(op, "12")) {
+            String result = challenge(adventurerId);
+            if(!Objects.equals(result, "")) {
+                System.out.println(result);
+            }
         } else {
             assert false;
         }
@@ -193,5 +198,10 @@ public class Game {
         Adventurer employer = adventurers.get(employerId);
         Adventurer employee = adventurers.get(employeeId);
         employer.employ(employee);
+    }
+
+    public static String challenge(int adventurerId) {
+        Adventurer adventurer = adventurers.get(adventurerId);
+        return adventurer.challenge();
     }
 }
