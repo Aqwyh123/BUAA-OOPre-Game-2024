@@ -59,9 +59,9 @@ public class Game {
         } else if (Objects.equals(op, "11")) {
             int employeeId = Integer.parseInt(command.get(2));
             employ(adventurerId, employeeId);
-        } else if(Objects.equals(op, "12")) {
+        } else if (Objects.equals(op, "12")) {
             String result = challenge(adventurerId);
-            if(!Objects.equals(result, "")) {
+            if (!Objects.equals(result, "")) {
                 System.out.println(result);
             }
         } else {
@@ -181,13 +181,13 @@ public class Game {
                 originalHitPoint += toAdv.getHitPoint();
             }
             int status = from.chainCombat(equName, to);
-            if (status == 0) {
+            if (status != 0) {
                 return String.format("Adventurer %d defeated", fromId);
             } else {
                 for (Adventurer toAdv : toChain) {
                     eventualHitPoint += toAdv.getHitPoint();
                 }
-                return eventualHitPoint - originalHitPoint + "";
+                return originalHitPoint - eventualHitPoint + "";
             }
         } else {
             return null;

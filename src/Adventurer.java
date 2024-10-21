@@ -12,7 +12,7 @@ public class Adventurer extends Unit implements Combatable {
     private int defensePoint;
     private final ItemInventory backpack = new ItemInventory(this);
     private final Inventory<Unit> possessions = new Inventory<>(this);
-    private final HashMap<Adventurer, Integer> assistEmployerAttackPoint = new HashMap<>();
+    private final HashMap<Adventurer, Integer> assistEmployerHitPoint = new HashMap<>();
     private final HashMap<Adventurer, Integer> assistCount = new HashMap<>();
     private final HashSet<Adventurer> employees = new HashSet<>();
 
@@ -40,13 +40,7 @@ public class Adventurer extends Unit implements Combatable {
     }
 
     public void setHitPoint(int hitPoint) {
-        boolean isDecrease = hitPoint < this.hitPoint;
         this.hitPoint = hitPoint;
-        if (isDecrease) {
-            for (Adventurer employee : employees) {
-                employee.processCombatFor(this);
-            }
-        }
     }
 
     public void setAttackPoint(int attackPoint) {
@@ -161,11 +155,11 @@ public class Adventurer extends Unit implements Combatable {
     }
 
     private void prepareCombatFor(Adventurer employer) {
-        assistEmployerAttackPoint.put(employer, employer.getAttackPoint());
+        assistEmployerHitPoint.put(employer, employer.getHitPoint());
     }
 
     private void stopCombatFor(Adventurer employer) {
-        assistEmployerAttackPoint.remove(employer);
+        assistEmployerHitPoint.remove(employer);
     }
 
     private void prepareCombatedBy() {
@@ -196,12 +190,11 @@ public class Adventurer extends Unit implements Combatable {
         Equipment equipment = backpack.getEquipment(equName);
         if (isAttackable(equipment, toAdventurers)) {
             toAdventurers.forEach(Adventurer::prepareCombatedBy);
-            for (Adventurer adventurer : toAdventurers) {
-                equipment.use(adventurer);
-            }
+            equipment.use(toAdventurers);
             if (equipment.getDurability() == 0) {
                 deleteUnit(equipment.getId());
             }
+            toAdventurers.forEach(Adventurer::processCombatedBy);
             toAdventurers.forEach(Adventurer::stopCombatedBy);
             return 0;
         }
@@ -215,9 +208,7 @@ public class Adventurer extends Unit implements Combatable {
         }
         Equipment equipment = backpack.getEquipment(equName);
         if (isAttackable(equipment, toCompanions)) {
-            for (Adventurer adventurer : toCompanions) {
-                equipment.use(adventurer);
-            }
+            equipment.use(toCompanions);
             if (equipment.getDurability() == 0) {
                 deleteUnit(equipment.getId());
             }
@@ -227,8 +218,14 @@ public class Adventurer extends Unit implements Combatable {
     }
 
     private void processCombatFor(Adventurer employer) {
-        if (employer.getHitPoint() <= assistEmployerAttackPoint.get(employer) / 2) {
+        if (employer.getHitPoint() <= assistEmployerHitPoint.get(employer) / 2) {
             this.assist(employer);
+        }
+    }
+
+    private void processCombatedBy() {
+        for (Adventurer employee : employees) {
+            employee.processCombatFor(this);
         }
     }
 
@@ -267,6 +264,7 @@ public class Adventurer extends Unit implements Combatable {
         for (Adventurer employee : employees) {
             employee.setDefensePoint(employee.getDefensePoint() + 40);
         }
+        overallCombatEffectiveness += 40 * (employees.size() + 1);
 
         if (overallCombatEffectiveness <= 2000) {
             return result.trim();
@@ -276,6 +274,7 @@ public class Adventurer extends Unit implements Combatable {
         for (Adventurer employee : employees) {
             employee.setAttackPoint(employee.getAttackPoint() + 40);
         }
+        overallCombatEffectiveness += 40 * (employees.size() + 1);
 
         if (overallCombatEffectiveness <= 3000) {
             return result.trim();
@@ -285,6 +284,7 @@ public class Adventurer extends Unit implements Combatable {
         for (Adventurer employee : employees) {
             employee.setDefensePoint(employee.getDefensePoint() + 40);
         }
+        overallCombatEffectiveness += 40 * (employees.size() + 1);
 
         if (overallCombatEffectiveness <= 4000) {
             return result.trim();
@@ -294,6 +294,7 @@ public class Adventurer extends Unit implements Combatable {
         for (Adventurer employee : employees) {
             employee.setDefensePoint(employee.getDefensePoint() + 30);
         }
+        overallCombatEffectiveness += 30 * (employees.size() + 1);
 
         if (overallCombatEffectiveness <= 5000) {
             return result.trim();

@@ -1,3 +1,5 @@
+import java.util.Collection;
+
 public class Equipment extends Item {
     private static final int DEFAULT_INCREASE = 1;
     private static final int DEFAULT_DECREASE = 1;
@@ -16,29 +18,31 @@ public class Equipment extends Item {
         this.durability += DEFAULT_INCREASE;
     }
 
-    public void use(Adventurer to) {
+    public void use(Collection<Adventurer> adventurers) {
         Adventurer from = this.getOwner();
-        switch (getType()) {
-            case "Axe": {
-                to.setHitPoint(to.getHitPoint() / 10);
-                break;
+        for (Adventurer adventurer : adventurers) {
+            switch (getType()) {
+                case "Axe": {
+                    adventurer.setHitPoint(adventurer.getHitPoint() / 10);
+                    break;
+                }
+                case "Sword": {
+                    int ce = this.getCombatEffectiveness();
+                    int ownerAP = from.getAttackPoint();
+                    int opponentDP = adventurer.getDefensePoint();
+                    int decrease = ce + ownerAP - opponentDP;
+                    adventurer.setHitPoint(adventurer.getHitPoint() - decrease);
+                    break;
+                }
+                case "Blade": {
+                    int ce = this.getCombatEffectiveness();
+                    int decrease = ce + from.getAttackPoint();
+                    adventurer.setHitPoint(adventurer.getHitPoint() - decrease);
+                    break;
+                }
+                default:
+                    break;
             }
-            case "Sword": {
-                int ce = this.getCombatEffectiveness();
-                int ownerAP = from.getAttackPoint();
-                int opponentDP = to.getDefensePoint();
-                int decrease = ce + ownerAP - opponentDP;
-                to.setHitPoint(to.getHitPoint() - decrease);
-                break;
-            }
-            case "Blade": {
-                int ce = this.getCombatEffectiveness();
-                int decrease = ce + from.getAttackPoint();
-                to.setHitPoint(to.getHitPoint() - decrease);
-                break;
-            }
-            default:
-                break;
         }
         this.durability -= DEFAULT_DECREASE;
     }

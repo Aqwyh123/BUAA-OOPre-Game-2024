@@ -16,6 +16,7 @@ public class Fragment extends Unit implements Ownable {
     }
 
     public int redeemed(int welfareId) {
+        Adventurer owner = getOwner();
         Item welfare = (Item) owner.getUnit(welfareId);
         if (welfare == null) {
             owner.addUnit(new Bottle(welfareId, getName(),

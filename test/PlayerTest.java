@@ -88,9 +88,53 @@ public class PlayerTest {
         Game.addAdventurer(300, "Charlie");
         Game.addAdventurer(400, "David");
         Game.addEquipment(100, 1, "EquAxe", 100, "Axe", 100);
-        Assert.assertEquals("Adventurer 100 defeated", Game.combat(100, "EquAxe", "", new ArrayList<>(Arrays.asList(200, 300, 400))));
+        Assert.assertEquals("Adventurer 100 defeated", Game.combat(100, "EquAxe", "normal", new ArrayList<>(Arrays.asList(200, 300, 400))));
         Game.carryItem(100, 1);
-        Assert.assertEquals("Bob 50\nCharlie 50\nDavid 50", Game.combat(100, "EquAxe", "", new ArrayList<>(Arrays.asList(200, 300, 400))));
+        Assert.assertEquals("Bob 50\nCharlie 50\nDavid 50", Game.combat(100, "EquAxe", "normal", new ArrayList<>(Arrays.asList(200, 300, 400))));
+        Game.employ(300, 100);
+        Assert.assertEquals("Bob 5\nCharlie 5\nDavid 5", Game.combat(100, "EquAxe", "normal", new ArrayList<>(Arrays.asList(200, 300, 400))));
+        Assert.assertEquals("Axe EquAxe 98",Game.deleteItem(300, 1));
+        Game.addEquipment(100, 2, "EquAxe", 100, "Axe", 100);
+        Game.addEquipment(200, 3, "EquAxe", 100, "Axe", 100);
+        Game.carryItem(100, 2);
+        Assert.assertEquals("465", Game.combat(100, "EquAxe", "chain", new ArrayList<>(Arrays.asList(200, 300, 400))));
         Game.reset();
+    }
+
+    @Test
+    public void challenge(){
+        Game.addAdventurer(100, "Alice");
+        Game.addAdventurer(200, "Bob");
+        Game.addAdventurer(300, "Charlie");
+        Game.addAdventurer(400, "David");
+
+        Game.addBottle(200, 2, "AtkB", 0, "AtkBottle", 999);
+        Game.addBottle(300, 3, "AtkB", 0, "AtkBottle", 999);
+        Game.addBottle(400, 4, "AtkB", 0, "AtkBottle", 999);
+        Game.carryItem(200,2);
+        Game.carryItem(300,3);
+        Game.carryItem(400,4);
+
+        Game.employ(100, 200);
+        Assert.assertEquals("", Game.challenge(100));
+
+        Game.useBottle(200, 2);
+        Assert.assertEquals("Cloak of Shadows", Game.challenge(100));
+        Game.addEquipment(100, 5, "EquAxe", 100, "Axe", 939);
+        Game.carryItem(100, 5);
+        Assert.assertEquals("Cloak of Shadows\nFlamebrand Sword", Game.challenge(100));
+    }
+
+    @Test
+    public void test() {
+        Game.executeCommand(new ArrayList<>(Arrays.asList("1", "988244353", "adv1")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("2", "988244353", "1", "bottle","50","AtkBottle", "1000")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("3", "988244353", "2", "equipment","50","Axe", "2000")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("6", "988244353", "1")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("6", "988244353", "2")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("1", "1000000007", "adv2")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("11", "988244353", "1000000007")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("12", "988244353")));
+        Game.executeCommand(new ArrayList<>(Arrays.asList("7", "988244353", "1")));
     }
 }
