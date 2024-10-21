@@ -14,7 +14,7 @@ public class Adventurer extends Unit implements Combatable {
     private final Inventory<Unit> possessions = new Inventory<>(this);
     private final HashMap<Adventurer, Integer> assistEmployerAttackPoint = new HashMap<>();
     private final HashMap<Adventurer, Integer> assistCount = new HashMap<>();
-    private final ArrayList<Adventurer> employees = new ArrayList<>();
+    private final HashSet<Adventurer> employees = new HashSet<>();
 
     public Adventurer(int id, String name) {
         super(id, name);
