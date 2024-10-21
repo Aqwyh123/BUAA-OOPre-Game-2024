@@ -21,6 +21,7 @@ public class ItemInventory extends Inventory<Item> {
             }
             super.addUnit(item);
         }
+        item.setOwner(this.getOwner());
     }
 
     public Equipment getEquipment(String name) {

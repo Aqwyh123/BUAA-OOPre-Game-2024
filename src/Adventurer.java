@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class Adventurer extends Unit implements Combatable {
     private static final int ORIGINAL_HIT_POINT = 500;
@@ -10,15 +12,17 @@ public class Adventurer extends Unit implements Combatable {
     private int defensePoint;
     private final ItemInventory backpack = new ItemInventory(this);
     private final Inventory<Unit> possessions = new Inventory<>(this);
+    private final HashMap<Adventurer, Integer> assistEmployerAttackPoint = new HashMap<>();
+    private final HashMap<Adventurer, Integer> assistCount = new HashMap<>();
+    private final ArrayList<Adventurer> employees = new ArrayList<>();
 
     public Adventurer(int id, String name) {
-        super(id, name, null);
+        super(id, name);
         this.hitPoint = ORIGINAL_HIT_POINT;
         this.attackPoint = ORIGINAL_ATTACK_POINT;
         this.defensePoint = ORIGINAL_DEFENSE_POINT;
     }
 
-    @Override
     public int getCombatEffectiveness() {
         return this.attackPoint + this.defensePoint;
     }
@@ -37,6 +41,9 @@ public class Adventurer extends Unit implements Combatable {
 
     public void setHitPoint(int hitPoint) {
         this.hitPoint = hitPoint;
+        for (Adventurer employee : assistEmployerAttackPoint.keySet()) {
+            employee.processCombatFor(this);
+        }
     }
 
     public void setAttackPoint(int attackPoint) {
@@ -59,6 +66,7 @@ public class Adventurer extends Unit implements Combatable {
         if (backpack.getUnit(unitId) != null) {
             this.discardItem(unitId);
         }
+        assert possessions.getUnit(unitId) != null;
         possessions.deleteUnit(unitId);
     }
 
@@ -77,8 +85,7 @@ public class Adventurer extends Unit implements Combatable {
     }
 
     public void discardItem(int itemId) {
-        Item item = backpack.getUnit(itemId);
-        assert item != null;
+        assert backpack.getUnit(itemId) != null;
         backpack.deleteUnit(itemId);
     }
 
@@ -120,23 +127,120 @@ public class Adventurer extends Unit implements Combatable {
         }
     }
 
-    public int combat(String equName, ArrayList<Adventurer> adventurers) {
-        Equipment equipment = backpack.getEquipment(equName);
+    public void employ(Adventurer employee) {
+        employee.employedBy(this);
+        employees.add(employee);
+    }
+
+    private void employedBy(Adventurer employer) {
+        assistCount.put(employer, 0);
+    }
+
+    public void dismiss(Adventurer employee) {
+        employee.dismissedBy(this);
+        employees.remove(employee);
+    }
+
+    private void dismissedBy(Adventurer employer) {
+        assistCount.remove(employer);
+    }
+
+    public HashSet<Adventurer> getCompanions(int layer) {
+        HashSet<Adventurer> companions = new HashSet<>();
+        companions.add(this);
+        if (layer == 1) {
+            return companions;
+        }
+        for (Adventurer employee : employees) {
+            companions.addAll(employee.getCompanions(layer - 1));
+        }
+        return companions;
+    }
+
+    private void prepareCombatFor(Adventurer employer) {
+        assistEmployerAttackPoint.put(employer, employer.getAttackPoint());
+    }
+
+    private void stopCombatFor(Adventurer employer) {
+        assistEmployerAttackPoint.remove(employer);
+    }
+
+    private void prepareCombatedBy() {
+        for (Adventurer employee : employees) {
+            employee.prepareCombatFor(this);
+        }
+    }
+
+    private void stopCombatedBy() {
+        for (Adventurer employee : employees) {
+            employee.stopCombatFor(this);
+        }
+    }
+
+    private boolean isAttackable(Equipment equipment, Collection<Adventurer> toAdventurers) {
         if (equipment == null) {
-            return -1;
+            return false;
         }
         int overallAttack = this.attackPoint + equipment.getCombatEffectiveness();
         int overallDefense = 0;
-        for (Adventurer adventurer : adventurers) {
-            overallDefense = Math.max(overallDefense, adventurer.defensePoint);
+        for (Adventurer toAdventurer : toAdventurers) {
+            overallDefense = Math.max(overallDefense, toAdventurer.defensePoint);
         }
-        if (overallAttack <= overallDefense) {
-            return -1;
+        return overallAttack > overallDefense;
+    }
+
+    public int normalCombat(String equName, ArrayList<Adventurer> toAdventurers) {
+        Equipment equipment = backpack.getEquipment(equName);
+        if (isAttackable(equipment, toAdventurers)) {
+            toAdventurers.forEach(Adventurer::prepareCombatedBy);
+            for (Adventurer adventurer : toAdventurers) {
+                equipment.use(adventurer);
+            }
+            if (equipment.getDurability() == 0) {
+                deleteUnit(equipment.getId());
+            }
+            toAdventurers.forEach(Adventurer::stopCombatedBy);
+            return 0;
         }
-        equipment.use(adventurers);
-        if (equipment.getDurability() == 0) {
+        return -1;
+    }
+
+    public int chainCombat(String equName, ArrayList<Adventurer> toAdventures) {
+        HashSet<Adventurer> toCompanions = new HashSet<>();
+        for (Adventurer toAdventurer : toAdventures) {
+            toCompanions.addAll(toAdventurer.getCompanions(5));
+        }
+        Equipment equipment = backpack.getEquipment(equName);
+        if (isAttackable(equipment, toCompanions)) {
+            for (Adventurer adventurer : toCompanions) {
+                equipment.use(adventurer);
+            }
+            if (equipment.getDurability() == 0) {
+                deleteUnit(equipment.getId());
+            }
+            return 0;
+        }
+        return -1;
+    }
+
+    public void processCombatFor(Adventurer employer) {
+        if (employer.getHitPoint() <= assistEmployerAttackPoint.get(employer) / 2) {
+            this.assist(employer);
+        }
+    }
+
+    public void assist(Adventurer employer) {
+        HashMap<Integer, Item> equipments = backpack.getUnits("Equipment");
+        for (Item item : equipments.values()) {
+            Equipment equipment = (Equipment) item;
             deleteUnit(equipment.getId());
+            employer.addUnit(equipment);
         }
-        return 0;
+        int count = assistCount.get(employer);
+        count++;
+        assistCount.put(employer, count);
+        if (count > 3) {
+            employer.dismiss(this);
+        }
     }
 }

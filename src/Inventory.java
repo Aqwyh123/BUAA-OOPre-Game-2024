@@ -1,6 +1,6 @@
 import java.util.HashMap;
 
-public class Inventory<T extends Unit> {
+public class Inventory<T extends Unit> implements Ownable {
     private final Adventurer owner;
     private final HashMap<Integer, T> units = new HashMap<>();
 
@@ -14,6 +14,16 @@ public class Inventory<T extends Unit> {
 
     public T getUnit(int itemId) {
         return units.get(itemId);
+    }
+
+    public HashMap<Integer, T> getUnits(String type) {
+        HashMap<Integer, T> filteredUnits = new HashMap<>();
+        for (T unit : units.values()) {
+            if (unit.getClass().getSimpleName().equals(type)) {
+                filteredUnits.put(unit.getId(), unit);
+            }
+        }
+        return filteredUnits;
     }
 
     public HashMap<Integer, T> getUnits(String name, String type) {

@@ -88,9 +88,9 @@ public class PlayerTest {
         Game.addAdventurer(300, "Charlie");
         Game.addAdventurer(400, "David");
         Game.addEquipment(100, 1, "EquAxe", 100, "Axe", 100);
-        Assert.assertEquals("Adventurer 100 defeated", Game.combat(100, "EquAxe", new ArrayList<>(Arrays.asList(200, 300, 400))));
+        Assert.assertEquals("Adventurer 100 defeated", Game.combat(100, "EquAxe", "", new ArrayList<>(Arrays.asList(200, 300, 400))));
         Game.carryItem(100, 1);
-        Assert.assertEquals("Bob 50\nCharlie 50\nDavid 50", Game.combat(100, "EquAxe", new ArrayList<>(Arrays.asList(200, 300, 400))));
+        Assert.assertEquals("Bob 50\nCharlie 50\nDavid 50", Game.combat(100, "EquAxe", "", new ArrayList<>(Arrays.asList(200, 300, 400))));
         Game.reset();
     }
 }

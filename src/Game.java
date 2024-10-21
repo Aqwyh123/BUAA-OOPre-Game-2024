@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Objects;
 
 public class Game {
@@ -10,8 +11,8 @@ public class Game {
     }
 
     public static void executeCommand(ArrayList<String> command) {
-        int adventurerId = Integer.parseInt(command.get(1));
         String op = command.get(0);
+        int adventurerId = Integer.parseInt(command.get(1));
         if (Objects.equals(op, "1")) {
             String name = command.get(2);
             addAdventurer(adventurerId, name);
@@ -48,12 +49,18 @@ public class Game {
             System.out.println(redeemWarfare(adventurerId, name, welfareId));
         } else if (Objects.equals(op, "10")) {
             String name = command.get(2);
-            int adventureNum = Integer.parseInt(command.get(3));
+            String attackType = command.get(3);
+            int adventureNum = Integer.parseInt(command.get(4));
             ArrayList<Integer> adventurerIds = new ArrayList<>();
             for (int i = 0; i < adventureNum; i++) {
-                adventurerIds.add(Integer.parseInt(command.get(4 + i)));
+                adventurerIds.add(Integer.parseInt(command.get(5 + i)));
             }
-            System.out.println(combat(adventurerId, name, adventurerIds));
+            System.out.println(combat(adventurerId, name, attackType, adventurerIds));
+        } else if (Objects.equals(op, "11")) {
+            int employeeId = Integer.parseInt(command.get(2));
+            employ(adventurerId, employeeId);
+        } else {
+            assert false;
         }
     }
 
@@ -141,23 +148,50 @@ public class Game {
         }
     }
 
-    public static String combat(int fromId, String equName, ArrayList<Integer> toIds) {
+    public static String combat(int fromId, String equName, String type, ArrayList<Integer> toIds) {
         Adventurer from = adventurers.get(fromId);
         ArrayList<Adventurer> to = new ArrayList<>();
         for (int id : toIds) {
             to.add(adventurers.get(id));
         }
-        int status = from.combat(equName, to);
-        String result = "";
-        if (status != 0) {
-            result = String.format("Adventurer %d defeated", fromId);
-        } else {
-            for (Adventurer toAdv : to) {
-                if (toAdv.getHitPoint() > 0) {
+        if (Objects.equals(type, "normal")) {
+            int status = from.normalCombat(equName, to);
+            String result = "";
+            if (status != 0) {
+                result = String.format("Adventurer %d defeated", fromId);
+            } else {
+                for (Adventurer toAdv : to) {
                     result = result.concat(toAdv.getName() + " " + toAdv.getHitPoint() + "\n");
                 }
             }
+            return result.trim();
+        } else if (Objects.equals(type, "chain")) {
+            HashSet<Adventurer> toChain = new HashSet<>();
+            for (Adventurer toAdv : to) {
+                toChain.addAll(toAdv.getCompanions(5));
+            }
+            int originalHitPoint = 0;
+            int eventualHitPoint = 0;
+            for (Adventurer toAdv : toChain) {
+                originalHitPoint += toAdv.getHitPoint();
+            }
+            int status = from.chainCombat(equName, to);
+            if (status == 0) {
+                return String.format("Adventurer %d defeated", fromId);
+            } else {
+                for (Adventurer toAdv : toChain) {
+                    eventualHitPoint += toAdv.getHitPoint();
+                }
+                return eventualHitPoint - originalHitPoint + "";
+            }
+        } else {
+            return null;
         }
-        return result.trim();
+    }
+
+    public static void employ(int employerId, int employeeId) {
+        Adventurer employer = adventurers.get(employerId);
+        Adventurer employee = adventurers.get(employeeId);
+        employer.employ(employee);
     }
 }
