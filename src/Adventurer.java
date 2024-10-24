@@ -133,15 +133,6 @@ public class Adventurer extends Unit implements Combatable {
         assistCount.put(employer, 0);
     }
 
-    public void dismiss(Adventurer employee) {
-        employee.dismissedBy(this);
-        employees.remove(employee);
-    }
-
-    private void dismissedBy(Adventurer employer) {
-        assistCount.remove(employer);
-    }
-
     public HashSet<Adventurer> getCompanions(int layer) {
         HashSet<Adventurer> companions = new HashSet<>();
         companions.add(this);
@@ -154,7 +145,7 @@ public class Adventurer extends Unit implements Combatable {
         return companions;
     }
 
-    private void prepareCombatFor(Adventurer employer) {
+    private void startCombatFor(Adventurer employer) {
         assistEmployerHitPoint.put(employer, employer.getHitPoint());
     }
 
@@ -162,13 +153,24 @@ public class Adventurer extends Unit implements Combatable {
         assistEmployerHitPoint.remove(employer);
     }
 
+    private int processCombatFor(Adventurer employer) {
+        if (employer.getHitPoint() <= assistEmployerHitPoint.get(employer) / 2) {
+            this.assist(employer);
+        }
+        if (assistCount.get(employer) > 3) {
+            return 1;
+        }
+        return 0;
+    }
+
     private void prepareCombatedBy() {
         for (Adventurer employee : employees) {
-            employee.prepareCombatFor(this);
+            employee.startCombatFor(this);
         }
     }
 
-    private void stopCombatedBy() {
+    private void processCombatedBy() {
+        employees.removeIf(employee -> employee.processCombatFor(this) != 0);
         for (Adventurer employee : employees) {
             employee.stopCombatFor(this);
         }
@@ -195,7 +197,6 @@ public class Adventurer extends Unit implements Combatable {
                 deleteUnit(equipment.getId());
             }
             toAdventurers.forEach(Adventurer::processCombatedBy);
-            toAdventurers.forEach(Adventurer::stopCombatedBy);
             return 0;
         }
         return -1;
@@ -217,18 +218,6 @@ public class Adventurer extends Unit implements Combatable {
         return -1;
     }
 
-    private void processCombatFor(Adventurer employer) {
-        if (employer.getHitPoint() <= assistEmployerHitPoint.get(employer) / 2) {
-            this.assist(employer);
-        }
-    }
-
-    private void processCombatedBy() {
-        for (Adventurer employee : employees) {
-            employee.processCombatFor(this);
-        }
-    }
-
     private void assist(Adventurer employer) {
         HashMap<Integer, Item> equipments = backpack.getUnits("Equipment");
         for (Item item : equipments.values()) {
@@ -239,9 +228,6 @@ public class Adventurer extends Unit implements Combatable {
         int count = assistCount.get(employer);
         count++;
         assistCount.put(employer, count);
-        if (count > 3) {
-            employer.dismiss(this);
-        }
     }
 
     public String challenge() {
