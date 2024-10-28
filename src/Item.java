@@ -1,13 +1,13 @@
 public abstract class Item extends Unit implements Combatable, Ownable {
     private final String type;
     private final int combatEffectiveness;
-    private Adventurer getOwner;
+    private Adventurer owner;
 
     protected Item(int id, String name, String type, int ce, Adventurer owner) {
         super(id, name);
         this.type = type;
         this.combatEffectiveness = ce;
-        this.getOwner = owner;
+        this.owner = owner;
     }
 
     public String getType() {
@@ -19,10 +19,10 @@ public abstract class Item extends Unit implements Combatable, Ownable {
     }
 
     public Adventurer getOwner() {
-        return this.getOwner;
+        return this.owner;
     }
 
     public void setOwner(Adventurer owner) {
-        this.getOwner = owner;
+        this.owner = owner;
     }
 }
